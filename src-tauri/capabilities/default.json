@@ -13,7 +13,7 @@
     "sql:allow-execute",
     "sql:allow-select",
     "notification:default",
-    "os:allow-hostname"
-
+    "os:allow-hostname",
+    "fs:default"
   ]
 }

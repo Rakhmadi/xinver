@@ -8,13 +8,9 @@ let get_username = async()=>{
 
 </script>
 <template>
+
     <h1 class="text-[#2d354f] text-2xl">Home</h1>
-    <input 
-  type="text"
-  placeholder="Masukkan data..."
-  class="w-full px-2 py-1 text-md border border-gray-300 rounded-lg 
-         focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]"
-/>
+    <input  type="text" placeholder="Masukkan data..." class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]"/>
 
 <button @click="get_username" class="px-3 py-1.5 text-sm font-medium text-white bg-[#2563EB] rounded-md hover:bg-[#1E40AF] focus:outline-none focus:ring-2 focus:ring-[#2563EB] cursor-pointer flex flex-row gap-2 justify-center">
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
@@ -22,4 +18,128 @@ let get_username = async()=>{
   </svg>
   <span>Simpan</span>
 </button>
+<div class="p-4">
+  <h1 class="text-xl font-semibold mb-4">Data Barang</h1>
+
+  <div class="overflow-x-auto bg-white rounded-xl shadow">
+    <table class="min-w-full text-sm text-left">
+      
+      <!-- HEADER -->
+      <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+        <tr>
+          <th class="px-4 py-3">Nama Barang</th>
+          <th class="px-4 py-3">SKU</th>
+          <th class="px-4 py-3">Stok</th>
+          <th class="px-4 py-3">Harga</th>
+          <th class="px-4 py-3 text-center">Aksi</th>
+        </tr>
+      </thead>
+
+      <!-- BODY -->
+      <tbody class="divide-y">
+
+        <!-- ROW -->
+        <tr class="hover:bg-gray-50 transition">
+          
+
+          <!-- NAMA -->
+          <td class="px-4 py-3 font-medium text-gray-800">
+            Laptop ASUS
+          </td>
+
+          <!-- SKU -->
+          <td class="px-4 py-3 text-gray-600">
+            LAP-001
+          </td>
+
+          <!-- STOK -->
+          <td class="px-4 py-3">
+            <span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700">
+              10
+            </span>
+          </td>
+
+          <!-- HARGA -->
+          <td class="px-4 py-3 text-gray-700">
+            Rp 8.000.000
+          </td>
+
+          <!-- AKSI -->
+          <td class="px-4 py-3 text-center space-x-2">
+            <button class="px-3 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700">
+              Edit
+            </button>
+            <button class="px-3 py-1 text-xs rounded bg-red-500 text-white hover:bg-red-600">
+              Hapus
+            </button>
+          </td>
+
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="bg-white shadow rounded-2xl p-4 flex gap-4">
+  <!-- Image -->
+  <div class="w-40 h-40 bg-gray-100 rounded-xl"></div>
+
+  <!-- Info -->
+  <div class="flex-1 space-y-2">
+    <h1 class="text-xl font-semibold">Laptop Asus ROG</h1>
+    <p class="text-sm text-gray-500">SKU: LPT-001</p>
+
+    <div class="flex gap-2 flex-wrap">
+      <span class="px-2 py-1 bg-blue-100 text-blue-600 rounded">
+        Elektronik
+      </span>
+      <span class="px-2 py-1 bg-blue-100 text-blue-600 rounded">
+        Laptop
+      </span>
+    </div>
+
+    <p class="text-lg font-bold text-green-600">
+      Rp 15.000.000
+    </p>
+  </div>
+</div>
+
+
+<div class="flex flex-wrap items-center gap-3 bg-white p-3 rounded-2xl shadow">
+
+  <!-- Search -->
+  <input 
+    type="text"
+    placeholder="Cari barang..."
+    class="flex-1 min-w-[200px] px-3 py-2 border rounded-lg 
+           focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+  />
+
+  <!-- Filter Category -->
+  <select class="px-3 py-2 border rounded-lg">
+    <option>Semua Kategori</option>
+    <option>Elektronik</option>
+    <option>ATK</option>
+  </select>
+
+  <!-- Sort By -->
+  <select class="px-3 py-2 border rounded-lg">
+    <option value="name">Nama</option>
+    <option value="price">Harga</option>
+    <option value="stock">Stok</option>
+    <option value="created_at">Tanggal</option>
+  </select>
+
+  <!-- Order -->
+  <button class="px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+    ⬆️ ASC
+  </button>
+
+  <!-- View Toggle -->
+  <button class="px-3 py-2 bg-gray-100 rounded-lg">
+    🔲
+  </button>
+
+</div>
+
 </template>
