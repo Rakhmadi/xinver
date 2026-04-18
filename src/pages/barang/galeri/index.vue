@@ -1,0 +1,3 @@
+<template>
+    galeri
+</template>

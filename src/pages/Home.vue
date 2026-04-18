@@ -1,9 +1,31 @@
 <script setup>
 import { invoke } from '@tauri-apps/api/core';
+import { ref, computed } from 'vue'
 
 
 let get_username = async()=>{
   console.log(await invoke('get_username'))
+}
+
+
+const search = ref('')
+const open = ref(false)
+
+const items = ref([
+  { id: 1, name: 'Laptop Asus' },
+  { id: 2, name: 'Laptop Lenovo' },
+  { id: 3, name: 'iPhone 13' }
+])
+
+const filtered = computed(() => {
+  return items.value.filter(i =>
+    i.name.toLowerCase().includes(search.value.toLowerCase())
+  )
+})
+
+const select = (item) => {
+  search.value = item.name
+  open.value = false
 }
 
 </script>
@@ -142,4 +164,66 @@ let get_username = async()=>{
 
 </div>
 
+<div class="relative w-full">
+  <input
+    type="text"
+    v-model="search"
+    @focus="open = true"
+    placeholder="Cari kategori..."
+    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#2563EB]"
+  />
+
+  <!-- Dropdown -->
+  <div 
+    v-if="open"
+    class="absolute w-full bg-white border mt-1 rounded-lg shadow max-h-60 overflow-auto"
+  >
+    <div 
+      v-for="item in filtered"
+      :key="item.id"
+      @click="select(item)"
+      class="px-3 py-2 hover:bg-blue-50 cursor-pointer"
+    >
+      {{ item.name }}
+    </div>
+
+    <div v-if="filtered.length === 0" class="p-2 text-gray-500">
+      Tidak ditemukan
+    </div>
+  </div>
+</div>
+
+<div class="p-4">
+  <h1 class="text-xl font-semibold mb-4">Galeri Barang</h1>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    
+    <!-- Card Item -->
+    <div class="bg-white rounded-xl shadow hover:shadow-lg transition relative group">
+      
+      <!-- Gambar -->
+      <img 
+        src="https://picsum.photos/200/300?grayscale" 
+        alt="Barang"
+        class="w-full h-40 object-cover rounded-t-xl"
+      />
+
+      <!-- Nama Barang -->
+      <div class="p-3">
+        <h2 class="text-sm font-medium text-gray-800 truncate">
+          Laptop ASUS ROG
+        </h2>
+      </div>
+
+      <!-- Tombol Hapus -->
+      <button 
+        class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+      >
+        Hapus
+      </button>
+
+    </div>
+
+  </div>
+</div>
 </template>

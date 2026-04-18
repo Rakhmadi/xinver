@@ -149,7 +149,7 @@ let togglePassword = (event)=>{
                 </div>
 
                 <!-- Button -->
-                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition duration-200 cursor-pointer">Login</button>
+                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-full transition duration-200 cursor-pointer">Login</button>
             </div>
         </div>
     </section>
