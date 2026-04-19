@@ -1,0 +1,118 @@
+let migration_sql = `
+
+PRAGMA foreign_keys = OFF;
+BEGIN TRANSACTION;
+
+CREATE TABLE IF NOT EXISTS tb_category (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tb_supplier (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  no_phone TEXT NOT NULL,
+  address TEXT NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tb_location (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  code TEXT,
+  name TEXT,
+  description TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tb_merek (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tb_product (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  sku TEXT NOT NULL UNIQUE,
+  category_id INTEGER,
+  merk_id INTEGER,
+  location_id INTEGER,
+  description TEXT,
+  unit TEXT NOT NULL,
+  stock INTEGER NOT NULL DEFAULT 0,
+  price INTEGER NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (category_id) REFERENCES tb_category(id),
+  FOREIGN KEY (merk_id) REFERENCES tb_merek(id),
+  FOREIGN KEY (location_id) REFERENCES tb_location(id)
+);
+
+CREATE TABLE IF NOT EXISTS tb_header_transaction_in (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  supplier_id INTEGER NOT NULL,
+  date TEXT DEFAULT CURRENT_TIMESTAMP,
+  description TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (supplier_id) REFERENCES tb_supplier(id)
+);
+
+CREATE TABLE IF NOT EXISTS tb_detail_transaction_in (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  transaction_in_id INTEGER NOT NULL,
+  product_id INTEGER NOT NULL,
+  qty INTEGER NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (transaction_in_id) REFERENCES tb_header_transaction_in(id),
+  FOREIGN KEY (product_id) REFERENCES tb_product(id)
+);
+
+CREATE TABLE IF NOT EXISTS tb_header_transaction_out (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  date TEXT NOT NULL,
+  description TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tb_detail_transaction_out (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  transaction_out_id INTEGER NOT NULL,
+  product_id INTEGER NOT NULL,
+  qty INTEGER NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (transaction_out_id) REFERENCES tb_header_transaction_out(id),
+  FOREIGN KEY (product_id) REFERENCES tb_product(id)
+);
+
+CREATE TABLE IF NOT EXISTS tb_galery (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  product_id INTEGER NOT NULL,
+  name_file TEXT NOT NULL,
+  description TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (product_id) REFERENCES tb_product(id)
+);
+
+CREATE TABLE IF NOT EXISTS tb_user (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  password TEXT NOT NULL
+);
+
+COMMIT;
+PRAGMA foreign_keys = ON;`
+
+export default migration_sql

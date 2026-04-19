@@ -1,29 +1,77 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue';
+import { barangStore } from '../../../model_state/barang.js'
+import { storeToRefs } from 'pinia';
 
-const data_kategori = ref([
-  { id: 1, name: 'Elektronik' },
-  { id: 2, name: 'Laptop' },
-  { id: 3, name: 'Smartphone' }
-])
+let data_barang = barangStore()
+// const { data_category } = storeToRefs(data_barang)
 
-onMounted(()=>{
-    filtered.value = data_kategori.value
+let show_kategori = ref(false)
+let show_merek = ref(false)
+let show_location = ref(false)
+
+let kategori = ref("");
+let kategori_id = ref()
+let merek = ref("")
+let merek_id = ref()
+let location = ref("")
+let location_id = ref()
+let order_by_desc = ref(true)
+// let filtered_category = ref([])
+// let filtered_merek = ref([])
+// let filtered_location = ref([])
+
+let filtered_category = computed(()=>{
+    return data_barang.data_category.filter(x=>{
+        return x.name.toLowerCase().includes(kategori.value.toLowerCase())
+    })
+})
+
+let filtered_merek = computed(()=>{
+    return data_barang.data_merek.filter(x=>{
+        return x.name.toLowerCase().includes(merek.value.toLowerCase())
+    })
+})
+let filtered_location = computed(()=>{
+    return data_barang.data_location.filter(x=>{
+        return x.name.toLowerCase().includes(location.value.toLowerCase())
+    })
 })
 
 
-let show_kategori = ref(false)
-let kategori = ref();
-let kategori_id = ref()
-let order_by_desc = ref(true)
-let filtered = ref([])
 
 
-watch(kategori,(value)=>{
-    filtered.value = data_kategori.value.filter(x=>{
-         return x.name.toLowerCase().includes(value?.toLowerCase())
-    })
-},{immediate:true})
+
+onMounted(()=>{
+        
+    data_barang.getDataBarang()
+    data_barang.getDataKategori()
+    data_barang.getDataMerek()
+    data_barang.getDataLocation()
+
+//     filtered_category.value = data_barang.data_category
+    // filtered_merek.value = data_barang.data_merek
+    // filtered_location.value = data_barang.data_location
+    // filtered_category.value = data_barang.data_category
+})
+
+
+
+
+// watch([kategori,merek,location],([new_kategori,new_merek,new_location],[old_kategori,old_merek,old_location])=>{
+//     //fiter category
+//     filtered_category.value = data_barang.data_category.filter(x=>{
+//          return x.name.toLowerCase().includes(new_kategori?.toLowerCase())
+//     })
+//     // filter merek
+//     filtered_merek.value = data_barang.data_merek.filter(x=>{
+//          return x.name.toLowerCase().includes(new_merek?.toLowerCase())
+//     })
+//     // filter location
+//     filtered_location.value = data_barang.data_location.filter(x=>{
+//          return x.name.toLowerCase().includes(new_location?.toLowerCase())
+//     })
+// },{immediate:true})
 
 let selectKategori = (name_select,id)=>{
     kategori.value = name_select
@@ -31,40 +79,58 @@ let selectKategori = (name_select,id)=>{
     show_kategori.value = false
 }
 
+let selectMerek = (name_select,id)=>{
+    merek.value = name_select
+    merek_id.value = id
+    show_merek.value = false
+}
+
+let selectLocation = (name_select,id)=>{
+    location.value = name_select
+    location_id.value = id
+    show_location.value = false
+}
+
 let blurAwait = ()=>{
     setTimeout(()=>{
         show_kategori.value = false
+        show_merek.value = false
+        show_location.value = false
     },100)
 }
 </script>
 <template>
     <h1 class="text-xl text-[#2d354f] font-semibold mb-4">Master Barang</h1>
+    {{data_barang.data_category }}
     <div class="flex justify-between  mb-4">
         <div class=" gap-2 flex flex-row w-[50%] items-center grow">
             <input type="text" placeholder="Cari Kode - Nama - SKU" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
             <div class="relative">
                 <input type="text" v-model="kategori" placeholder="Kategori" @focus="show_kategori = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <div v-show="show_kategori" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
-                    <li v-for="item in filtered" @click="selectKategori(item.name,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">{{ item.name }}</li>   
-                    <li v-if="filtered.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
+                    <li v-for="item in filtered_category" @click="selectKategori(item.name,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">{{ item.name }}</li>   
+                    <li v-if="filtered_category.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
                 </div>
             </div>
             <div class="relative">
-                <input type="text" v-model="kategori" placeholder="Merek" @focus="show_kategori = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-                <div v-show="show_kategori" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
-                    <li  v-for="item in filtered" @click="selectKategori(item.name,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">{{ item.name }}</li>   
-                    <li v-if="filtered.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
+                <input type="text" v-model="merek" placeholder="Merek" @focus="show_merek = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <div v-show="show_merek" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
+                    <li  v-for="item in filtered_merek" @click="selectMerek(item.name,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">{{ item.name }}</li>   
+                    <li v-if="filtered_merek.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
                 </div>
             </div>
             <div class="relative">
-                <input type="text" v-model="kategori" placeholder="Location" @focus="show_kategori = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-                <div v-show="show_kategori" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
-                    <li  v-for="item in filtered" @click="selectKategori(item.name,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">{{ item.name }}</li>   
-                    <li v-if="filtered.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
+                <input type="text" v-model="location" placeholder="Location" @focus="show_location = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <div v-show="show_location" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
+                    <li  v-for="item in filtered_location" @click="selectLocation(item.name,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2"> {{item.code}} - {{ item.name }}</li>   
+                    <li v-if="filtered_location.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
                 </div>
             </div>
             <select class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-                <option value="">Order</option>
+                <option value="created_at">Tangal Dibuat</option>
+                <option value="updated_at">Tangal Diupdate</option>
+                <option value="nama">Nama</option>
+                <option value="sku">SKU</option>
             </select>
             <button @click="order_by_desc = !order_by_desc" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                 <div v-if="order_by_desc">

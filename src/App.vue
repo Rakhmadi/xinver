@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import Database from '@tauri-apps/plugin-sql';
+import { DB, initDatabase } from './db'
 import { appDataDir } from '@tauri-apps/api/path';
 
 let db = ref()
@@ -48,14 +48,8 @@ let list_menu = ref([
 onMounted(async()=>{
 
 try {
-        db.value = await Database.load("sqlite:test.db");
-    
-    let x = await db.value.execute(`CREATE TABLE IF NOT EXISTS categories (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT
-      );`)
-
-      console.log(x);
+    initDatabase()
+   
 } catch (error) {
     
 }

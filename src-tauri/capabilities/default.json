@@ -14,6 +14,11 @@
     "sql:allow-select",
     "notification:default",
     "os:allow-hostname",
-    "fs:default"
+    "fs:default",
+    "fs:allow-exists",
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [{ "path": "$APPDATA/*" }]
+    }
   ]
 }
