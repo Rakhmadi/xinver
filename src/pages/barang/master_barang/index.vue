@@ -10,6 +10,7 @@ let show_kategori = ref(false)
 let show_merek = ref(false)
 let show_location = ref(false)
 
+let search = ref("")
 let kategori = ref("");
 let kategori_id = ref()
 let merek = ref("")
@@ -17,6 +18,7 @@ let merek_id = ref()
 let location = ref("")
 let location_id = ref()
 let order_by_desc = ref(true)
+let order_by = ref('created_at')
 // let filtered_category = ref([])
 // let filtered_merek = ref([])
 // let filtered_location = ref([])
@@ -32,6 +34,7 @@ let filtered_merek = computed(()=>{
         return x.name.toLowerCase().includes(merek.value.toLowerCase())
     })
 })
+
 let filtered_location = computed(()=>{
     return data_barang.data_location.filter(x=>{
         return x.name.toLowerCase().includes(location.value.toLowerCase())
@@ -98,35 +101,42 @@ let blurAwait = ()=>{
         show_location.value = false
     },100)
 }
+
+let clear = ()=>{
+    kategori.value = ""
+    merek.value = ""
+    location.value = ""
+    order_by.value = "created_at"
+    search.value = ""
+}
 </script>
 <template>
     <h1 class="text-xl text-[#2d354f] font-semibold mb-4">Master Barang</h1>
-    {{data_barang.data_category }}
-    <div class="flex justify-between  mb-4">
+    <div class="flex justify-between mb-4">
         <div class=" gap-2 flex flex-row w-[50%] items-center grow">
-            <input type="text" placeholder="Cari Kode - Nama - SKU" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+            <input v-model="search" type="text" placeholder="Cari Kode - Nama - SKU" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
             <div class="relative">
-                <input type="text" v-model="kategori" placeholder="Kategori" @focus="show_kategori = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <input type="text" v-model="kategori" placeholder="Kategori" @click="show_kategori = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <div v-show="show_kategori" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
-                    <li v-for="item in filtered_category" @click="selectKategori(item.name,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">{{ item.name }}</li>   
+                    <li v-for="item in filtered_category" @click="selectKategori(item.name,item.id),show_kategori = true " :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">{{ item.name }}</li>   
                     <li v-if="filtered_category.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
                 </div>
             </div>
             <div class="relative">
-                <input type="text" v-model="merek" placeholder="Merek" @focus="show_merek = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <input type="text" v-model="merek" placeholder="Merek" @click="show_merek = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <div v-show="show_merek" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
                     <li  v-for="item in filtered_merek" @click="selectMerek(item.name,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">{{ item.name }}</li>   
                     <li v-if="filtered_merek.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
                 </div>
             </div>
             <div class="relative">
-                <input type="text" v-model="location" placeholder="Location" @focus="show_location = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <input type="text" v-model="location" placeholder="Location" @click="show_location = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <div v-show="show_location" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
                     <li  v-for="item in filtered_location" @click="selectLocation(item.name,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2"> {{item.code}} - {{ item.name }}</li>   
                     <li v-if="filtered_location.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
                 </div>
             </div>
-            <select class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+            <select v-model="order_by" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <option value="created_at">Tangal Dibuat</option>
                 <option value="updated_at">Tangal Diupdate</option>
                 <option value="nama">Nama</option>
@@ -146,7 +156,7 @@ let blurAwait = ()=>{
                 <span v-if="order_by_desc" class="text-red">Desc</span>
                 <span v-else class="text-red">Asc</span>
             </button>
-            <button class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+            <button @click="clear" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
