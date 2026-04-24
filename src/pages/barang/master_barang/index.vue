@@ -12,13 +12,16 @@ let show_location = ref(false)
 
 let search = ref("")
 let kategori = ref("");
-let kategori_id = ref()
+let kategori_id = ref('')
 let merek = ref("")
-let merek_id = ref()
+let merek_id = ref('')
 let location = ref("")
-let location_id = ref()
+let location_code = ref("")
+let location_id = ref('')
 let order_by_desc = ref(true)
 let order_by = ref('created_at')
+let take = ref(10)
+let page = ref(1)
 // let filtered_category = ref([])
 // let filtered_merek = ref([])
 // let filtered_location = ref([])
@@ -37,20 +40,35 @@ let filtered_merek = computed(()=>{
 
 let filtered_location = computed(()=>{
     return data_barang.data_location.filter(x=>{
-        return x.name.toLowerCase().includes(location.value.toLowerCase())
+        return x.name.toLowerCase().includes(location.value.toLowerCase()) || x.code.toLowerCase().includes(location.value.toLowerCase())
     })
 })
 
 
+watch([search,kategori,merek,location,order_by,order_by_desc,take],()=>{
+    if(kategori.value === ''){
+        kategori_id.value = ''
+    }
+    
+    if(merek.value === ''){
+        merek_id.value = ''
+    }
 
+    if(location.value === ''){
+        location_id.value = ''
+    }
+
+    data_barang.getDataBarang(search.value,kategori_id.value,merek_id.value,location_id.value,order_by.value,order_by_desc.value,1,take.value)
+})
 
 
 onMounted(()=>{
         
-    data_barang.getDataBarang()
     data_barang.getDataKategori()
     data_barang.getDataMerek()
     data_barang.getDataLocation()
+
+    data_barang.getDataBarang(search.value,kategori_id.value,merek_id.value,location_id.value,order_by.value,order_by_desc.value,1,take.value)
 
 //     filtered_category.value = data_barang.data_category
     // filtered_merek.value = data_barang.data_merek
@@ -88,9 +106,10 @@ let selectMerek = (name_select,id)=>{
     show_merek.value = false
 }
 
-let selectLocation = (name_select,id)=>{
+let selectLocation = (code,name_select,id)=>{
     location.value = name_select
     location_id.value = id
+    location_code.value = code
     show_location.value = false
 }
 
@@ -99,6 +118,7 @@ let blurAwait = ()=>{
         show_kategori.value = false
         show_merek.value = false
         show_location.value = false
+
     },100)
 }
 
@@ -106,9 +126,32 @@ let clear = ()=>{
     kategori.value = ""
     merek.value = ""
     location.value = ""
+    kategori_id.value = ''
+    merek_id.value = ''
+    location_id.value = ''
     order_by.value = "created_at"
     search.value = ""
+    location_code.value = ""
+    take.value = 10
+
+    data_barang.getDataBarang(search.value,kategori_id.value,merek_id.value,location_id.value,order_by.value,order_by_desc.value,1,take.value)
+
 }
+
+let nextPage = ()=>{
+    if(page.value < data_barang.data_barang.total_page){
+        page.value = page.value + 1
+        data_barang.getDataBarang(search.value,kategori_id.value,merek_id.value,location_id.value,order_by.value,order_by_desc.value,page.value,take.value)
+    }
+}
+
+let previousPage = ()=>{
+    if(page.value > 1){
+        page.value = page.value - 1
+        data_barang.getDataBarang(search.value,kategori_id.value,merek_id.value,location_id.value,order_by.value,order_by_desc.value,page.value,take.value)
+    }
+}
+
 </script>
 <template>
     <h1 class="text-xl text-[#2d354f] font-semibold mb-4">Master Barang</h1>
@@ -132,15 +175,22 @@ let clear = ()=>{
             <div class="relative">
                 <input type="text" v-model="location" placeholder="Location" @click="show_location = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <div v-show="show_location" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
-                    <li  v-for="item in filtered_location" @click="selectLocation(item.name,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2"> {{item.code}} - {{ item.name }}</li>   
+                    <li  v-for="item in filtered_location" @click="selectLocation(item.code,`${item.code} - ${item.name}`,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2"> {{item.code}} - {{ item.name }}</li>   
                     <li v-if="filtered_location.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
                 </div>
             </div>
+            <select v-model="take" class="w-[60] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <option default value="10">Take - 10</option>
+                <option value="20">Take - 20</option>
+                <option value="50">Take - 50</option>
+                <option value="100">Take - 100</option>
+            </select>
             <select v-model="order_by" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-                <option value="created_at">Tangal Dibuat</option>
-                <option value="updated_at">Tangal Diupdate</option>
-                <option value="nama">Nama</option>
-                <option value="sku">SKU</option>
+                <option value="created_at">Order by Tangal Dibuat</option>
+                <option value="updated_at">Order by Tangal Diupdate</option>
+                <option value="id">Order by Kode Barang</option>
+                <option value="name">Order by Nama</option>
+                <option value="sku">Order by SKU</option>
             </select>
             <button @click="order_by_desc = !order_by_desc" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                 <div v-if="order_by_desc">
@@ -181,26 +231,30 @@ let clear = ()=>{
             <!-- HEADER -->
             <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
                 <tr>
+                    <th class="px-4 py-3">Code Barang</th>
                     <th class="px-4 py-3">Nama Barang</th>
                     <th class="px-4 py-3">SKU</th>
                     <th class="px-4 py-3">Stok</th>
                     <th class="px-4 py-3">Harga</th>
+                    <th class="px-4 py-3">Kategori</th>
+                    <th class="px-4 py-3">Merek</th>
+                    <th class="px-4 py-3">Location</th>
                     <th class="px-4 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
             <!-- BODY -->
-            <tbody class="divide-y">
+            <tbody class="divide-y divide-gray-200">
                 <!-- ROW -->
-                <tr class="hover:bg-gray-50 transition">
-                    <!-- NAMA -->
-                    <td class="px-4 py-3 font-medium text-gray-800"> Laptop ASUS </td>
-                    <!-- SKU -->
-                    <td class="px-4 py-3 text-gray-600"> LAP-001 </td>
-                    <!-- STOK -->
-                    <td class="px-4 py-3"><span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700"> 10 </span></td>
-                    <!-- HARGA -->
-                    <td class="px-4 py-3 text-gray-700"> Rp 8.000.000 </td>
-                    <!-- AKSI -->
+                <tr v-for="item in data_barang.data_barang.data" :key="item.id" class="hover:bg-gray-50 transition">
+                    <td class="px-4 py-3 font-medium text-gray-800"> {{ item.code_barang }} </td>
+                    <td class="px-4 py-3 text-gray-600"> {{ item.name }} </td>
+                    <td class="px-4 py-3 text-gray-600"> {{ item.sku }} </td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700"> {{ item.product_stock }}</span></td>
+                    <td class="px-4 py-3 text-gray-700"> {{ item.product_price }} </td>
+                    <td class="px-4 py-3 text-gray-700"> {{ item.category_name }} </td>
+                    <td class="px-4 py-3 text-gray-700"> {{ item.merek_name }} </td>
+                    <td class="px-4 py-3 text-gray-700"> {{ `${item.location_code} - ${item.location_name}` }} </td>
+
                     <td class="px-4 py-3 text-center flex flex-row-reverse gap-2">
                         <button href="/" class="bg-[#f35757] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#ff5c5c] focus:border-b-1 text-white cursor-pointer">
                             <div>
@@ -233,11 +287,12 @@ let clear = ()=>{
             </tbody>
         </table>
     </div>
-    <div class="mt-4 text-[#2d354f] text-sm">
-        <span>Halaman 1 hingga 20 dari 100 Entri</span>
+    <div class="mt-4 text-[#2d354f] text-sm flex gap-2">
+
+        <span>Halaman {{ page }} hingga {{ data_barang.data_barang.total_page }} dari {{ data_barang.data_barang.total_data }} Entri</span>
     </div>
     <div class="mt-4 flex gap-2">
-        <button class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+        <button @click="previousPage" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -245,7 +300,7 @@ let clear = ()=>{
             </div>
             <span class="text-red">Sebelum</span>
         </button>
-        <button class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+        <button @click="nextPage" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />

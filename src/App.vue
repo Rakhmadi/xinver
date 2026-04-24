@@ -83,7 +83,7 @@ let togglePassword = (event)=>{
 
 <template>
 <section v-if="is_logged === 'true' " class="flex flex-col h-screen">
-        <div class="nav fixed w-full">
+        <div class="nav fixed w-full z-50">
             <div class="py-4 px-4 bg-[#2563EB] flex flex-row justify-between items-center">
                 <div>
                     <ul class="box-border flex flex-row gap-2">
