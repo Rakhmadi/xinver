@@ -17,6 +17,10 @@ const routes = [
         name : 'master_barang',
         component : () => import("./pages/barang/master_barang/index.vue")
       },{
+        path : 'detail_barang/:id',
+        name : 'detail_barang',
+        component : ()=> import("./pages/barang/master_barang/detail.vue")
+      },{
         path : 'kategori',
         name : 'kategori',
         component : () => import("./pages/barang/kategori/index.vue")

@@ -1,7 +1,8 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import { barangStore } from '../../../model_state/barang.js'
-import { storeToRefs } from 'pinia';
+import Tutut from 'tutut';
+import { formatRupiah } from '../../../helper_function.js'
 
 let data_barang = barangStore()
 // const { data_category } = storeToRefs(data_barang)
@@ -119,7 +120,7 @@ let blurAwait = ()=>{
         show_merek.value = false
         show_location.value = false
 
-    },100)
+    },200)
 }
 
 let clear = ()=>{
@@ -152,17 +153,39 @@ let previousPage = ()=>{
     }
 }
 
+function highlightText(text, keyword) {
+    if (!keyword) return text;
+
+    return text.replace(
+        new RegExp(keyword, "gi"),
+        `<mark>$&</mark>`
+    );
+}
+
+
+let deleteBarang = ()=>{
+    Tutut.danger({
+	    title : "Hapus Data?",
+	    text : "Data yang sudah dihapus tidak dapat dikembalikan lagi. Apakah Anda yakin ingin melanjutkan?"
+    },{
+        showConfirm : true,
+        onConfirm : ()=>{ alert("Confirm Success") },
+        onCancel : ()=>{ alert("Cancel Success") }
+      })
+}
+
 </script>
 <template>
     <h1 class="text-xl text-[#2d354f] font-semibold mb-4">Master Barang</h1>
+    
     <div class="flex justify-between mb-4">
         <div class=" gap-2 flex flex-row w-[50%] items-center grow">
-            <input v-model="search" type="text" placeholder="Cari Kode - Nama - SKU" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+            <input v-model="search" type="text" placeholder="Cari Kode - Nama Barang - SKU" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
             <div class="relative">
                 <input type="text" v-model="kategori" placeholder="Kategori" @click="show_kategori = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <div v-show="show_kategori" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
                     <li v-for="item in filtered_category" @click="selectKategori(item.name,item.id),show_kategori = true " :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">{{ item.name }}</li>   
-                    <li v-if="filtered_category.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
+                    <li v-if="filtered_category.length === 0" class="list-none mx-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
                 </div>
             </div>
             <div class="relative">
@@ -179,18 +202,21 @@ let previousPage = ()=>{
                     <li v-if="filtered_location.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
                 </div>
             </div>
-            <select v-model="take" class="w-[60] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+            <select v-model="take" class="w-[70] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <option default value="10">Take - 10</option>
                 <option value="20">Take - 20</option>
                 <option value="50">Take - 50</option>
                 <option value="100">Take - 100</option>
             </select>
             <select v-model="order_by" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-                <option value="created_at">Order by Tangal Dibuat</option>
-                <option value="updated_at">Order by Tangal Diupdate</option>
+                <option value="created_at">Order by Tanggal Dibuat</option>
+                <option value="updated_at">Order by Tanggal Diperbarui</option>
                 <option value="id">Order by Kode Barang</option>
                 <option value="name">Order by Nama</option>
                 <option value="sku">Order by SKU</option>
+                <option value="stock">Order by Stok</option>
+                <option value="price">Order by Harga</option>
+
             </select>
             <button @click="order_by_desc = !order_by_desc" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                 <div v-if="order_by_desc">
@@ -212,8 +238,12 @@ let previousPage = ()=>{
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                     </svg>
                 </div>
-                <span class="text-red">Clear</span>
+                <span class="text-red">Reset</span>
             </button>
+            <div class="flex flex-row gap-2 items-center" v-show="data_barang.loading">
+                <div class="w-5 h-5 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <span>Loading</span>
+            </div>
             <div>
             </div>
         </div>
@@ -239,40 +269,25 @@ let previousPage = ()=>{
                     <th class="px-4 py-3">Kategori</th>
                     <th class="px-4 py-3">Merek</th>
                     <th class="px-4 py-3">Location</th>
-                    <th class="px-4 py-3 text-center">Aksi</th>
+                    <th class="px-4 py-3 text-center"></th>
                 </tr>
             </thead>
             <!-- BODY -->
             <tbody class="divide-y divide-gray-200">
                 <!-- ROW -->
                 <tr v-for="item in data_barang.data_barang.data" :key="item.id" class="hover:bg-gray-50 transition">
-                    <td class="px-4 py-3 font-medium text-gray-800"> {{ item.code_barang }} </td>
-                    <td class="px-4 py-3 text-gray-600"> {{ item.name }} </td>
-                    <td class="px-4 py-3 text-gray-600"> {{ item.sku }} </td>
-                    <td class="px-4 py-3"><span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700"> {{ item.product_stock }}</span></td>
-                    <td class="px-4 py-3 text-gray-700"> {{ item.product_price }} </td>
+                    <td class="px-4 py-3 font-medium text-gray-800" v-html="highlightText(item.code_barang,search)"></td>
+                    <td class="px-4 py-3 text-gray-600" v-html="highlightText(item.name,search)"></td>
+                    <td class="px-4 py-3 text-gray-600" v-html="highlightText(item.sku,search)"> </td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700"> {{ item.product_stock }} </span> - {{ item.product_unit }}</td>
+                    <td class="px-4 py-3 text-gray-700"> {{ formatRupiah(item.product_price) }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ item.category_name }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ item.merek_name }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ `${item.location_code} - ${item.location_name}` }} </td>
 
                     <td class="px-4 py-3 text-center flex flex-row-reverse gap-2">
-                        <button href="/" class="bg-[#f35757] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#ff5c5c] focus:border-b-1 text-white cursor-pointer">
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                </svg>
-                            </div>
-                            <span class="text-red">Delete</span>
-                        </button>
-                        <button href="/" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
-                                    <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
-                                </svg>
-                            </div>
-                            <span class="text-red">Edit</span>
-                        </button>
-                        <button href="/" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+
+                        <router-link :to="`barang/detail_barang/${item.id}`" class="bg-[#2563EB] no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
@@ -280,7 +295,7 @@ let previousPage = ()=>{
                                 </svg>
                             </div>
                             <span class="text-red">Detail</span>
-                        </button>
+                        </router-link>
                     </td>
                 </tr>
                 
@@ -292,7 +307,7 @@ let previousPage = ()=>{
         <span>Halaman {{ page }} hingga {{ data_barang.data_barang.total_page }} dari {{ data_barang.data_barang.total_data }} Entri</span>
     </div>
     <div class="mt-4 flex gap-2">
-        <button @click="previousPage" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+        <button @click="previousPage" :class="page <= 1 ? 'bg-[#7397e6]' : 'bg-[#2563EB] hover:bg-[#1E40AF]' " class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent  focus:border-b-1 text-white cursor-pointer">
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -300,7 +315,7 @@ let previousPage = ()=>{
             </div>
             <span class="text-red">Sebelum</span>
         </button>
-        <button @click="nextPage" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+        <button @click="nextPage" :class="page >= data_barang.data_barang.total_page ? 'bg-[#7397e6]' : 'bg-[#2563EB] hover:bg-[#1E40AF]' " class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent focus:border-b-1 text-white cursor-pointer">
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
@@ -309,4 +324,5 @@ let previousPage = ()=>{
             <span class="text-red">Berikutnya</span>
         </button>
     </div>
+
 </template>

@@ -6,13 +6,16 @@ export const barangStore = defineStore('barang',{
             data_barang : {},
             data_category : [],
             data_merek : [],
-            data_location : []
+            data_location : [],
+            single_data_barang : {},
+            data_image_product : [],
+            loading : false
         }
     },
     actions : {
         async getDataBarang(search,kategori_id,merek_id,location_id,order_by,is_desc,page,take){
-                    
-            let or_search = (search) ? `AND ( ('B-' || tb_product.id) LIKE '%${search}%' OR tb_product.name LIKE '%${search}%' OR tb_product.sku LIKE '%${search}%')` : ""  
+            this.loading = true                
+            let or_search = (search) ? `AND ( ('B-' || tb_product.id) LIKE '%${search}%' OR tb_product.name LIKE '%${search}%' OR tb_product.description LIKE '%${search}%' OR tb_product.sku LIKE '%${search}%')` : ""  
 
             let conditional_kategori_id = (kategori_id) ? `AND (tb_product.category_id = '${kategori_id}' )` : ""
 
@@ -30,10 +33,12 @@ export const barangStore = defineStore('barang',{
 
             let raw_query = `SELECT 
                 'B-' || tb_product.id  AS code_barang ,
+                tb_product.id,
                 tb_product.name,
                 tb_product.sku,
                 tb_product.stock as product_stock,
                 tb_product.price as product_price,
+                tb_product.unit as product_unit,
                 tb_category.name AS category_name,
                 tb_merek.name AS merek_name,
                 tb_location.name AS location_name,
@@ -57,9 +62,53 @@ export const barangStore = defineStore('barang',{
                 total_page : Number(Math.ceil(total_page[0].total_data / take_data)),
                 data : data
             }
+            this.loading = false   
+        },
+        
+        
+        async getSingleDataBarang(id_barang){
+
+            let data = await(await DB()).select(`SELECT tb_product.* ,
+                'B-' || tb_product.id  AS code_barang ,
+                tb_category.name AS category_name,
+                tb_merek.name AS merek_name,
+                tb_location.name AS location_name,
+                tb_location.code AS location_code
+                from tb_product 
+                LEFT JOIN tb_category ON tb_category.id = tb_product.category_id 
+                LEFT JOIN tb_merek ON tb_merek.id = tb_product.merk_id
+                LEFT JOIN tb_location ON tb_location.id = tb_product.location_id where tb_product.id = ${id_barang}`)
+
+            this.single_data_barang = data[0]
         },
 
-        
+        async getDataImage(id){
+            let data = await(await DB()).select(`SELECT * FROM tb_galery WHERE product_id = ${id}`,)
+            this.data_image_product = data
+        },
+
+        async addDataImage(product_id,name_file,description){
+            
+            let exec = await(await DB()).execute(`INSERT INTO tb_galery (product_id,name_file,description) VALUES ($1,$2,$3)`,
+                [product_id,name_file,description]
+            )            
+            
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
+            
+        },
+        async deleteDataImage(id){
+            let exec = await(await DB()).execute(`DELETE FROM tb_galery WHERE id = $1`,[id])
+
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
+        },
         async getDataKategori(){
             this.data_category = await (await DB()).select("SELECT * from tb_category ORDER BY name ASC")
         },

@@ -18,7 +18,22 @@
     "fs:allow-exists",
     {
       "identifier": "fs:allow-exists",
-      "allow": [{ "path": "$APPDATA/*" }]
-    }
+      "allow": [
+        {
+          "path": "$APPDATA/*"
+        }
+      ]
+    },
+    "dialog:default",
+    "dialog:allow-open",
+    "fs:allow-mkdir",{
+      "identifier": "fs:allow-mkdir",
+      "allow": [{ "path": "$APPDATA/**" }]
+    },
+    "fs:allow-write-file",{
+      "identifier": "fs:scope",
+      "allow": ["$DOCUMENT/*", "$APPDATA/**"]
+    },
+    "fs:allow-remove"
   ]
 }

@@ -12,12 +12,16 @@
   "app": {
     "windows": [
       {
-        "title": "xinver",
+        "title": "xinver - Inventory Management System",
         "maximized": true
       }
     ],
     "security": {
-      "csp": null
+        "csp": "default-src 'self'; img-src 'self' asset: https://asset.localhost",
+        "assetProtocol": {
+          "enable": true,
+          "scope": ["**"]
+        }
     }
   },
   "bundle": {
