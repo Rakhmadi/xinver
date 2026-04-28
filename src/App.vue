@@ -2,7 +2,9 @@
 import { onMounted, ref } from 'vue';
 import { DB, initDatabase } from './db'
 import { appDataDir } from '@tauri-apps/api/path';
+import { useRoute } from 'vue-router'
 
+let route = useRoute()
 let db = ref()
 
 let is_logged = ref(false)

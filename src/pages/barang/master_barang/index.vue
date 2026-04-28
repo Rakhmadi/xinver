@@ -3,9 +3,14 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { barangStore } from '../../../model_state/barang.js'
 import Tutut from 'tutut';
 import { formatRupiah } from '../../../helper_function.js'
+import { useRoute } from 'vue-router';
 
+let route = useRoute()
 let data_barang = barangStore()
 // const { data_category } = storeToRefs(data_barang)
+
+let msg = ref(false)
+let msg_content = ref('')
 
 let show_kategori = ref(false)
 let show_merek = ref(false)
@@ -70,6 +75,14 @@ onMounted(()=>{
     data_barang.getDataLocation()
 
     data_barang.getDataBarang(search.value,kategori_id.value,merek_id.value,location_id.value,order_by.value,order_by_desc.value,1,take.value)
+    
+    if(route.query.data_succes_add === "true"){
+        msg.value = true
+        msg_content.value = 'Data Berhasil Di Tambahkan '
+    }else{
+        msg.value = false
+    }
+    
 
 //     filtered_category.value = data_barang.data_category
     // filtered_merek.value = data_barang.data_merek
@@ -177,7 +190,6 @@ let deleteBarang = ()=>{
 </script>
 <template>
     <h1 class="text-xl text-[#2d354f] font-semibold mb-4">Master Barang</h1>
-    
     <div class="flex justify-between mb-4">
         <div class=" gap-2 flex flex-row w-[50%] items-center grow">
             <input v-model="search" type="text" placeholder="Cari Kode - Nama Barang - SKU" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
@@ -242,19 +254,19 @@ let deleteBarang = ()=>{
             </button>
             <div class="flex flex-row gap-2 items-center" v-show="data_barang.loading">
                 <div class="w-5 h-5 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                <span>Loading</span>
+                <span>Memuat Data ....</span>
             </div>
             <div>
             </div>
         </div>
-        <button href="/" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+        <router-link to="barang/tambah_barang" class="bg-[#2563EB] no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
             </div>
             <span class="text-red">Tambah</span>
-        </button>
+        </router-link>
     </div>
     <div class="overflow-x-auto bg-white rounded-xl shadow">
         <table class="min-w-full text-sm text-left">

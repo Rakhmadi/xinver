@@ -1,3 +1,4 @@
+import { path } from '@tauri-apps/api'
 import { createWebHistory, createRouter } from 'vue-router'
 
 
@@ -20,6 +21,14 @@ const routes = [
         path : 'detail_barang/:id',
         name : 'detail_barang',
         component : ()=> import("./pages/barang/master_barang/detail.vue")
+      },{
+        path : 'tambah_barang',
+        name : 'tambah_barang',
+        component : () => import("./pages/barang/master_barang/tambah_barang.vue")
+      },{
+        path : 'edit_barang/:id',
+        name : 'edit_barang',
+        component : ()=> import("./pages/barang/master_barang/edit_barang.vue")
       },{
         path : 'kategori',
         name : 'kategori',

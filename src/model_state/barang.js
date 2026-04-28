@@ -80,11 +80,51 @@ export const barangStore = defineStore('barang',{
                 LEFT JOIN tb_location ON tb_location.id = tb_product.location_id where tb_product.id = ${id_barang}`)
 
             this.single_data_barang = data[0]
+            
+            return data
         },
 
         async getDataImage(id){
             let data = await(await DB()).select(`SELECT * FROM tb_galery WHERE product_id = ${id}`,)
             this.data_image_product = data
+        },
+
+        async addDataBarang(name,sku,category_id,merk_id,location_id,description,unit,stock,price){
+
+            let exec = await(await DB()).execute(`INSERT INTO tb_product (name,sku,category_id,merk_id,location_id,description,unit,stock,price)
+                VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,[name,sku,category_id,merk_id,location_id,description,unit,stock,price])            
+            
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
+
+        },
+
+        async updateDataBarang(name,sku,category_id,merk_id,location_id,description,unit,stock,price,product_id){
+        let exec = await(await DB()).execute(`UPDATE tb_product SET
+            name = $1, 
+            sku = $2, 
+            category_id = $3,
+            merk_id = $4,
+            location_id = $5,
+            description = $6,
+            unit = $7,
+            stock = $8,
+            price = $9 WHERE id = $10 `,[name,sku,category_id,merk_id,location_id,description,unit,stock,price,product_id])
+
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
+        },
+
+
+        
+        async checkSKUbarang(sku){
+            return await (await DB()).select("SELECT * from tb_product WHERE sku = $1",[sku])
         },
 
         async addDataImage(product_id,name_file,description){

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted,ref } from 'vue';
+import { onMounted,ref,nextTick } from 'vue';
 import { barangStore } from '../../../model_state/barang.js'
 import { useRoute } from 'vue-router'
 import { formatRupiah } from '../../../helper_function.js'
@@ -29,6 +29,8 @@ let show_modal_image = ref(false)
 let file = ref([])
 
 let description_image = ref('')
+
+let loading_image = ref(false)
 
 let dataImageSelection = (data)=>{
   data_image_selection.value = data
@@ -76,7 +78,9 @@ let fileChanges = async(event)=>{
   
 }
 let saveImages = async()=>{
+  
   if(file.value.length >= 1){
+    loading_image.value = true
     try{
       let first_file = file.value[0] 
       let file_ext = first_file.name.split('.').pop()
@@ -101,39 +105,49 @@ let saveImages = async()=>{
       let exec_insert_galery_to_database = data_barang.addDataImage(Number(route.params.id),fileName,description_image.value)
 
       if(exec_insert_galery_to_database){
-        
-        data_barang.getDataImage(Number(route.params.id))
+
+        loading_image.value = false
 
         Tutut.success({
             title : "Pesan",
             text : "Detail Gambar Barang Berhasil Ditambahkan."
         })
+
+        setTimeout(async()=>{
+          await nextTick()
+          data_barang.getDataImage(Number(route.params.id))
+        },200)
+
+        description_image.value = ''
         
       }else{
         Tutut.info({
             title : "System Database",
             text : "Gagal Menambahkan Gambar Barang Ke Database"
         })
+        loading_image.value = false
       }
       
     }catch (error){
       console.log(error);
+      loading_image.value = false
     }
   }else{
     console.log("err");
+    loading_image.value = false
   }
 
 }
 
 let DeleteDataImage = async()=>{
-
+      
       Tutut.danger({
 	      title : "Hapus Gambar?",
 	      text : "Data gambar yang sudah dihapus tidak dapat dikembalikan lagi. Apakah Anda yakin ingin melanjutkan?"
       },{
         showConfirm : true,
         onConfirm : async()=>{
-          
+          loading_image.value = true
           data_barang.deleteDataImage(data_image_selection.value.id) 
           
           try {
@@ -144,17 +158,25 @@ let DeleteDataImage = async()=>{
 
           show_modal_image.value = false
 
-          data_barang.getDataImage(Number(route.params.id))
-          data_barang.getDataImage(Number(route.params.id))
-          data_barang.getDataImage(Number(route.params.id))
-
+          
           Tutut.success({
               title : "Pesan",
               text : "Detail Gambar Barang Berhasil Dihapus."
           })
+
+         setTimeout(async()=>{
+           await nextTick()
+           data_barang.getDataImage(Number(route.params.id))
+         },200)
+
+         loading_image.value = false
         },
       })
 
+}
+
+let dd = ()=>{
+  data_barang.getDataImage(Number(route.params.id))
 }
 
 </script>
@@ -243,7 +265,7 @@ let DeleteDataImage = async()=>{
     <hr class="border-t border-gray-300 my-4">
     <div class="px-6 py-5">
       <div class="flex flex-row justify-between pb-6">
-        <h1 class="text-xl font-bold text-[#2d354f]">List Foto</h1>
+        <h1 class="text-xl font-bold text-[#2d354f]">List Gambar Barang Detail</h1>
 
       </div>
       <div>
@@ -265,8 +287,8 @@ let DeleteDataImage = async()=>{
       <div class="flex flex-row justify-between mt-2"><h1 class="text-xl font-bold text-[#2d354f]">Tambah Gambar</h1></div>
       <div class="my-4 flex flex-row gap-2">
         <input @change="fileChanges" accept="image/*" type="file" placeholder="" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-        <input v-model="description" type="text" placeholder="Diskripsi" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-        <button @click="saveImages" href="/" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+        <input v-model="description_image" type="text" placeholder="Diskripsi" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+        <button :disabled="loading_image" @click="saveImages" href="/" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -274,12 +296,16 @@ let DeleteDataImage = async()=>{
             </div>
             <span class="text-red">Tambah Foto Barang</span>
         </button>
+            <div class="flex flex-row gap-2 items-center" v-show="loading_image">
+                <div class="w-5 h-5 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <span>Loading</span>
+            </div>
       </div>
     </div>
     <!-- Footer -->
      
     <div class="bg-gray-50 px-6 py-4 flex justify-end gap-2">
-     <router-link to="/barang" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+     <router-link to="/barang" class="bg-[#2563EB] no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
           <div>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
@@ -287,14 +313,14 @@ let DeleteDataImage = async()=>{
           </div>
           <span class="text-red">Kembali</span>
       </router-link>
-      <button href="/" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+      <router-link :to="`/barang/edit_barang/${data_barang.single_data_barang.id}`" class="bg-[#2563EB] no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
           <div>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
                   <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
               </svg>
           </div>
           <span class="text-red">Edit</span>
-      </button>
+      </router-link>
       <button @click="deleteBarang" class="bg-[#f35757] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#ff5c5c] focus:border-b-1 text-white cursor-pointer">
           <div>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
