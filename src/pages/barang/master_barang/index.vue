@@ -175,18 +175,6 @@ function highlightText(text, keyword) {
     );
 }
 
-
-let deleteBarang = ()=>{
-    Tutut.danger({
-	    title : "Hapus Data?",
-	    text : "Data yang sudah dihapus tidak dapat dikembalikan lagi. Apakah Anda yakin ingin melanjutkan?"
-    },{
-        showConfirm : true,
-        onConfirm : ()=>{ alert("Confirm Success") },
-        onCancel : ()=>{ alert("Cancel Success") }
-      })
-}
-
 </script>
 <template>
     <h1 class="text-xl text-[#2d354f] font-semibold mb-4">Master Barang</h1>

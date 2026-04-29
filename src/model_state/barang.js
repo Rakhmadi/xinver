@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { DB } from "../db";
+import { BaseDirectory ,remove} from '@tauri-apps/plugin-fs'
+
 export const barangStore = defineStore('barang',{
     state : ()=>{
         return {
@@ -82,6 +84,26 @@ export const barangStore = defineStore('barang',{
             this.single_data_barang = data[0]
             
             return data
+        },
+
+        async deleteDataBarang(id_barang){
+            
+            let exec0 = await(await DB()).select(`SELECT * FROM tb_galery  WHERE product_id = $1`,[id_barang])
+            
+            exec0.forEach(async(item) => {
+                await remove(`media\\${item.name_file}`, { baseDir: BaseDirectory.AppData });
+            });
+            
+            let exec2 = await(await DB()).execute(`DELETE FROM tb_galery WHERE product_id = $1`,[id_barang])
+
+            let exec1 = await(await DB()).execute(`DELETE FROM tb_product WHERE id = $1`,[id_barang])
+            
+
+            if(exec1.rowsAffected > 0 || exec2.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
         },
 
         async getDataImage(id){

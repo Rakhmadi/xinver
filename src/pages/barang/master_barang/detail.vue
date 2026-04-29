@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted,ref,nextTick } from 'vue';
 import { barangStore } from '../../../model_state/barang.js'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { formatRupiah } from '../../../helper_function.js'
 import Tutut from 'tutut';
 import { open } from '@tauri-apps/plugin-dialog';
@@ -10,12 +10,14 @@ import { VueImageZoomer } from 'vue-image-zoomer'
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { writeFile, mkdir, BaseDirectory ,remove} from '@tauri-apps/plugin-fs'
 import {storeToRefs} from 'pinia'
+import ImgNotFound from '../../../assets/imge-not-found.png'
 // when using `"withGlobalTauri": true`, you may use
 // const { open } = window.__TAURI__.dialog;
 
 // Open a dialog
 
 const route = useRoute()
+const router = useRouter()
 
 let data_barang = barangStore()
 const { data_image_product } = storeToRefs(data_barang)
@@ -58,13 +60,6 @@ let deleteBarang = ()=>{
       })
 }
 
-let openDialogFile = async()=>{
-  const file = await open({
-    multiple: false,
-    directory: false,
-  });
-  console.log(file)
-}
 
 let closeParentModal = (event)=>{
   if(event.target === event.currentTarget){
@@ -147,18 +142,26 @@ let DeleteDataImage = async()=>{
       },{
         showConfirm : true,
         onConfirm : async()=>{
+
           loading_image.value = true
-          data_barang.deleteDataImage(data_image_selection.value.id) 
+
+          let exec_data_image = await data_barang.deleteDataImage(data_image_selection.value.id) 
           
-          try {
-            await remove(`media\\${data_image_selection.value.name_file}`, { baseDir: BaseDirectory.AppData });
-          } catch (error) {
-            console.log(error); 
+          if(exec_data_image){
+            try {
+              await remove(`media\\${data_image_selection.value.name_file}`, { baseDir: BaseDirectory.AppData });
+            } catch (error) {
+              console.log(error); 
+            }
+          }else{
+            Tutut.info({
+                title : "System Database",
+                text : "Gagal Menghapus gambar"
+            })
           }
 
           show_modal_image.value = false
 
-          
           Tutut.success({
               title : "Pesan",
               text : "Detail Gambar Barang Berhasil Dihapus."
@@ -175,10 +178,42 @@ let DeleteDataImage = async()=>{
 
 }
 
-let dd = ()=>{
-  data_barang.getDataImage(Number(route.params.id))
-}
+let deleteDataBarang = async()=>{
+    
+    Tutut.danger({
+	    title : "Hapus Data?",
+	    text : "Data yang sudah dihapus tidak dapat dikembalikan lagi. Apakah Anda yakin ingin melanjutkan?"
+    },{
+        showConfirm : true,
+        onConfirm : async()=>{ 
+          
+          let exec_0 = await data_barang.deleteDataBarang(Number(data_barang.single_data_barang.id))
+          if(exec_0){
+            
+            router.push({
+                name : 'master_barang',
+            })
 
+            Tutut.info({
+                title : "Pesan",
+                text : "Data Barang Berhasil Dihapus."
+            }) 
+
+          }else{
+            Tutut.info({
+                title : "Database System",
+                text : "Data Barang Gagal Dihapus."
+            }) 
+          }
+
+         }
+      })
+    
+}
+let onErrorImage = (event)=>{
+  event.onerror = null
+  event.target.src = ImgNotFound
+}
 </script>
 
 <template>
@@ -271,9 +306,10 @@ let dd = ()=>{
       <div>
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <div class="relative group overflow-hidden rounded-xl cursor-pointer" v-for="item in data_image_product" :key="item.id" >
-              <img
+              
+              <img @error="onErrorImage"
                 :src="convertFileSrc(`${app_dir_path}/media/${item.name_file}`)"
-                alt="Gallery 1"
+                :alt="item.description"
                 class="w-full h-64 object-cover"
               >
               <div @click="dataImageSelection(item)" class="absolute inset-0 bg-gray-800/50 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
@@ -321,7 +357,7 @@ let dd = ()=>{
           </div>
           <span class="text-red">Edit</span>
       </router-link>
-      <button @click="deleteBarang" class="bg-[#f35757] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#ff5c5c] focus:border-b-1 text-white cursor-pointer">
+      <button @click="deleteDataBarang" class="bg-[#f35757] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#ff5c5c] focus:border-b-1 text-white cursor-pointer">
           <div>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
