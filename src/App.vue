@@ -84,11 +84,11 @@ let togglePassword = (event)=>{
 </script>
 
 <template>
-<section v-if="is_logged === 'true' " class="flex flex-col h-screen">
-        <div class="nav fixed w-full z-40">
-            <div class="py-4 px-4 bg-[#2563EB] flex flex-row justify-between items-center">
+<section v-if="true" class="flex flex-col h-screen">
+        <div class="nav fixed w-full z-40 ">
+            <div class="py-4 px-4 bg-[#2563EB] flex flex-row justify-between items-center " >
                 <div>
-                    <ul class="box-border flex flex-row gap-2">
+                    <ul class="box-border flex flex-row gap-2 items-center">
                         <li class="list-none">
                             <span class="text-xl text-white "><span class="text-lg text-white font-semibold">X</span><span class="text-xl text-white">inver</span></span>
                         </li>
@@ -140,7 +140,7 @@ let togglePassword = (event)=>{
                         <input id="password" type="password" placeholder="Enter password" class=" bg-[#e4edff] w-full px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                         <!-- Toggle Button -->
-                        <button type="button" @click="togglePassword" class="absolute right-3 top-2.5 text-gray-500 text-sm">Show</button>
+                        <button type="button" @click="togglePassword" class="absolute right-3 top-2.5 text-gray-500 text-sm cursor-pointer">Show</button>
                     </div>
                 </div>
 

@@ -181,14 +181,24 @@ let save = async()=>{
                 class="bg-white border-1 border-gray-200 h-[400px]  px-2 py-1 text-md bg-[#e4edff] border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]"
             />
         </div>
-        <button @click.prevent="save" class="bg-[#2563EB] mt-6 no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-            </div>
-            <span class="text-red">Tambah</span>
-        </button>
+        <div class="mt-6 flex flex-row items-center gap-2">
+            <router-link to="/barang" class="bg-[#2563EB] w-min no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                        </svg>
+                    </div>
+                    <span class="text-red">Kembali</span>
+            </router-link>
+            <button @click.prevent="save" class="bg-[#2563EB] no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                </div>
+                <span class="text-red">Tambah</span>
+            </button>
+        </div>
     </form>
 
     

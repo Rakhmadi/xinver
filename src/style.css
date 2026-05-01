@@ -17,4 +17,11 @@
       a {
         @apply text-blue-600 underline;
       }
+ 
 }
+
+      body{
+        overflow: auto !important;
+        background: #000 !important;
+      }
+

@@ -75,7 +75,10 @@ export const barangStore = defineStore('barang',{
                 tb_category.name AS category_name,
                 tb_merek.name AS merek_name,
                 tb_location.name AS location_name,
-                tb_location.code AS location_code
+                tb_location.code AS location_code,
+                tb_category.description AS  description_category,
+                tb_merek.description AS description_merek,
+                tb_location.description AS description_location
                 from tb_product 
                 LEFT JOIN tb_category ON tb_category.id = tb_product.category_id 
                 LEFT JOIN tb_merek ON tb_merek.id = tb_product.merk_id

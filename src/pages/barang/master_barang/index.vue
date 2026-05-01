@@ -177,7 +177,7 @@ function highlightText(text, keyword) {
 
 </script>
 <template>
-    <h1 class="text-xl text-[#2d354f] font-semibold mb-4">Master Barang</h1>
+    <h1 class="text-xl text-[#2d354f] font-semibold mb-4"></h1>
     <div class="flex justify-between mb-4">
         <div class=" gap-2 flex flex-row w-[50%] items-center grow">
             <input v-model="search" type="text" placeholder="Cari Kode - Nama Barang - SKU" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">

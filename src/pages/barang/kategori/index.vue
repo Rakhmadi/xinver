@@ -1,3 +1,18 @@
+<script setup>
+import { computed, onMounted, ref, watch } from 'vue';
+import { barangStore } from '../../../model_state/barang.js'
+import Tutut from 'tutut';
+
+let data_barang = barangStore()
+
+onMounted(()=>{
+    data_barang.getDataKategori()
+})
+    
+
+</script>
+
+
 <template>
     <div class="flex flex-row justify-between mb-4">
         <h1 class="text-xl font-semibold text-[#2d354f]">Data Kategori</h1>
@@ -15,26 +30,19 @@
             <!-- HEADER -->
             <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
                 <tr>
-                    <th class="px-4 py-3">Nama Barang</th>
-                    <th class="px-4 py-3">SKU</th>
-                    <th class="px-4 py-3">Stok</th>
-                    <th class="px-4 py-3">Harga</th>
+                    <th class="px-4 py-3">NO</th>
+                    <th class="px-4 py-3">Nama Kategori</th>
+                    <th class="px-4 py-3">Diskripsi</th>
                     <th class="px-4 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
             <!-- BODY -->
-            <tbody class="divide-y">
+            <tbody class="divide-y divide-gray-200">
                 <!-- ROW -->
-                <tr class="hover:bg-gray-50 transition">
-                    <!-- NAMA -->
-                    <td class="px-4 py-3 font-medium text-gray-800"> Laptop ASUS </td>
-                    <!-- SKU -->
-                    <td class="px-4 py-3 text-gray-600"> LAP-001 </td>
-                    <!-- STOK -->
-                    <td class="px-4 py-3"><span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700"> 10 </span></td>
-                    <!-- HARGA -->
-                    <td class="px-4 py-3 text-gray-700"> Rp 8.000.000 </td>
-                    <!-- AKSI -->
+                <tr v-for="(item,index) in data_barang.data_category" :key="item.id" class="hover:bg-gray-50 transition">
+                    <td class="px-4 py-3 font-medium text-gray-800"> {{ index + 1 }} </td>
+                    <td class="px-4 py-3 font-medium text-gray-800"> {{ item.name }} </td>
+                    <td class="px-4 py-3 text-gray-600">{{ item.description }}</td>
                     <td class="px-4 py-3 text-center flex flex-row-reverse gap-2">
                         <button href="/" class="bg-[#f35757] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#ff5c5c] focus:border-b-1 text-white cursor-pointer">
                             <div>
@@ -51,15 +59,6 @@
                                 </svg>
                             </div>
                             <span class="text-red">Edit</span>
-                        </button>
-                        <button href="/" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                </svg>
-                            </div>
-                            <span class="text-red">Detail</span>
                         </button>
                     </td>
                 </tr>
