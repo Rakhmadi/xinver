@@ -34,13 +34,19 @@ const routes = [
         name : 'kategori',
         component : () => import("./pages/barang/kategori/index.vue")
       },{
+        path : 'merk',
+        name : 'merk',
+        component : () => import("./pages/barang/merk/index.vue")
+      },{
         path : 'lokasi',
         name : 'lokasi',
         component : () => import("./pages/barang/lokasi/index.vue")
       }
     ]
-
-
+  },{
+    path : '/barang_masuk',
+    name : 'barang_masuk',
+    component : ()=> import('./pages/barang_masuk/index.vue')
   },{
     path : "/settings",
     name : "settings", 

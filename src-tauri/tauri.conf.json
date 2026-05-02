@@ -13,7 +13,8 @@
     "windows": [
       {
         "title": "xinver - Simple Inventory Management System",
-        "maximized": true
+        "decorations": false,
+        "resizable": false
       }
     ],
     "security": {

@@ -147,6 +147,7 @@ let clear = ()=>{
     search.value = ""
     location_code.value = ""
     take.value = 10
+    order_by_desc.value = true
 
     data_barang.getDataBarang(search.value,kategori_id.value,merek_id.value,location_id.value,order_by.value,order_by_desc.value,1,take.value)
 
@@ -177,7 +178,7 @@ function highlightText(text, keyword) {
 
 </script>
 <template>
-    <h1 class="text-xl text-[#2d354f] font-semibold mb-4"></h1>
+    <h1 class="text-xl text-[#2d354f] font-semibold mb-4">List Data Barang</h1>
     <div class="flex justify-between mb-4">
         <div class=" gap-2 flex flex-row w-[50%] items-center grow">
             <input v-model="search" type="text" placeholder="Cari Kode - Nama Barang - SKU" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
@@ -202,20 +203,20 @@ function highlightText(text, keyword) {
                     <li v-if="filtered_location.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
                 </div>
             </div>
-            <select v-model="take" class="w-[70] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-                <option default value="10">Take - 10</option>
-                <option value="20">Take - 20</option>
-                <option value="50">Take - 50</option>
-                <option value="100">Take - 100</option>
+            <select v-model="take" class="w-[120px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <option default value="10">Ambil - 10</option>
+                <option value="20">Ambil - 20</option>
+                <option value="50">Ambil - 50</option>
+                <option value="100">Ambil - 100</option>
             </select>
             <select v-model="order_by" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-                <option value="created_at">Order by Tanggal Dibuat</option>
-                <option value="updated_at">Order by Tanggal Diperbarui</option>
-                <option value="id">Order by Kode Barang</option>
-                <option value="name">Order by Nama</option>
-                <option value="sku">Order by SKU</option>
-                <option value="stock">Order by Stok</option>
-                <option value="price">Order by Harga</option>
+                <option value="created_at">Urut ke Tanggal Dibuat</option>
+                <option value="updated_at">Urut ke Tanggal Diperbarui</option>
+                <option value="id">Urut ke Kode Barang</option>
+                <option value="name">Urut ke Nama</option>
+                <option value="sku">Urut ke SKU</option>
+                <option value="stock">Urut ke Stok</option>
+                <option value="price">Urut ke Harga</option>
 
             </select>
             <button @click="order_by_desc = !order_by_desc" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
@@ -279,7 +280,8 @@ function highlightText(text, keyword) {
                     <td class="px-4 py-3 font-medium text-gray-800" v-html="highlightText(item.code_barang,search)"></td>
                     <td class="px-4 py-3 text-gray-600" v-html="highlightText(item.name,search)"></td>
                     <td class="px-4 py-3 text-gray-600" v-html="highlightText(item.sku,search)"> </td>
-                    <td class="px-4 py-3"><span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700"> {{ item.product_stock }} </span> - {{ item.product_unit }}</td>
+                    <td class="px-4 py-3">
+                    <span class="px-2 py-1 text-xs rounded" :class="item.product_stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"> {{ item.product_stock }} </span> - {{ item.product_unit }}</td>
                     <td class="px-4 py-3 text-gray-700"> {{ formatRupiah(item.product_price) }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ item.category_name }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ item.merek_name }} </td>

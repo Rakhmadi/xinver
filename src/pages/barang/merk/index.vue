@@ -14,30 +14,30 @@ let description_update = ref('')
 let show_modal_tambah = ref(false)
 let show_modal_update  =ref(false)
 
-let single_data_kategori = ref({})
+let single_data_merk = ref({})
 
 let loading = ref(false)
 
 onMounted(()=>{
-    data_barang.getDataKategori(false)
+    data_barang.getDataMerek(false)
 })
 
-let addKategori = async()=>{
+let addMerek = async()=>{
     loading.value = true
     if(name.value.length < 4){
         Tutut.warning({
             title : 'Pesan',
-            text : 'Nama Kategori Harus lebih dari 4'
+            text : 'Nama Merek Harus lebih dari 4'
         })
         loading.value = false
     }else{
-        let exec_0 = await data_barang.addDataKategori(name.value,description.value)
+        let exec_0 = await data_barang.addDataMerek(name.value,description.value)
         if(exec_0){
             Tutut.success({
                 title : 'Pesan',
-                text : 'Kategori Berhasil Ditambahkan'
+                text : 'Merek Berhasil Ditambahkan'
             })
-            data_barang.getDataKategori(false)
+            data_barang.getDataMerek(false)
             name.value = ''
             description.value = ''
             show_modal_tambah.value = false
@@ -61,20 +61,20 @@ let closeParentModal = (event)=>{
   }
 }
 
-let showEditKategori = (data)=>{
-    single_data_kategori.value = data
-    name_update.value = single_data_kategori.value.name
-    description_update.value = single_data_kategori.value.description
+let showEditMerek = (data)=>{
+    single_data_merk.value = data
+    name_update.value = single_data_merk.value.name
+    description_update.value = single_data_merk.value.description
     show_modal_update.value = true
 }
 
-let editKategoryData = async(id)=>{
+let editMerekData = async(id)=>{
     loading.value = true
-    let exec_0 = await data_barang.updateDataKategori(name_update.value,description_update.value,id)
+    let exec_0 = await data_barang.updateDataMerek(name_update.value,description_update.value,id)
     
     if(exec_0){
         show_modal_update.value = false
-        data_barang.getDataKategori(false)
+        data_barang.getDataMerek(false)
         Tutut.success({
             title : 'Pesan',
             text : 'Kategori Berhasil Diupdate'
@@ -92,23 +92,23 @@ let editKategoryData = async(id)=>{
     }
 }
 
-let deleteDatakategori = (id)=>{
+let callDeleteDataMerek = (id)=>{
     Tutut.danger({
         title : "Hapus Data ?",
-        text : "Data Kategori yang sudah dihapus tidak dapat dikembalikan lagi. Apakah Anda yakin ingin melanjutkan?"
+        text : "Data Merek yang sudah dihapus tidak dapat dikembalikan lagi. Apakah Anda yakin ingin melanjutkan?"
     },{
         showConfirm : true,
         onConfirm : async()=>{
-            let exec_0 = await data_barang.checkKategoriInProducts(id)
+            let exec_0 = await data_barang.checkMerekInProducts(id)
             if(exec_0){
-                let exec_1 = await data_barang.deleteDataKategori(id)
+                let exec_1 = await data_barang.deleteDataMerek(id)
                 if(exec_1){
                     
-                    data_barang.getDataKategori(false)
+                    data_barang.getDataMerek(false)
 
                     Tutut.success({
                         title : 'Pesan',
-                        text : 'Kategori Berhasil Dihapus'
+                        text : 'Merek Berhasil Dihapus'
                     })
                 }else{
                     Tutut.warning({
@@ -119,7 +119,7 @@ let deleteDatakategori = (id)=>{
             }else{
                 Tutut.info({
                     title : "Pesan",
-                    text : "Kategori Sedang Di Gunakan Dalam Data Barang"
+                    text : "Merek Sedang Di Gunakan Dalam Data Barang"
                 })
             }
         }
@@ -133,7 +133,7 @@ let deleteDatakategori = (id)=>{
 <template>
     <div class="flex flex-row justify-between mb-4">
         
-        <h1 class="text-xl font-semibold text-[#2d354f]">List Data Kategori</h1>
+        <h1 class="text-xl font-semibold text-[#2d354f]">List Data Merek</h1>
         <div class="flex felx-row gap-2 items-center">
             <button @click="show_modal_tambah = !show_modal_tambah" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                 <div>
@@ -158,11 +158,11 @@ let deleteDatakategori = (id)=>{
             <!-- BODY -->
             <tbody class="divide-y divide-gray-200">
                 <!-- ROW -->
-                <tr v-for="(item) in data_barang.data_category" :key="item.id" class="hover:bg-gray-50 transition">
+                <tr v-for="(item) in data_barang.data_merek" :key="item.id" class="hover:bg-gray-50 transition">
                     <td class="px-4 py-3 font-medium text-gray-800"> {{ item.name }} </td>
                     <td class="px-4 py-3 text-gray-600">{{ item.description }}</td>
                     <td class="px-4 py-3 text-center flex flex-row-reverse gap-2">
-                        <button @click="deleteDatakategori(item.id)" href="/" class="bg-[#f35757] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#ff5c5c] focus:border-b-1 text-white cursor-pointer">
+                        <button @click="callDeleteDataMerek(item.id)" href="/" class="bg-[#f35757] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#ff5c5c] focus:border-b-1 text-white cursor-pointer">
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
@@ -170,7 +170,7 @@ let deleteDatakategori = (id)=>{
                             </div>
                             <span class="text-red">Delete</span>
                         </button>
-                        <button @click="showEditKategori(item)" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+                        <button @click="showEditMerek(item)" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
                                     <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
@@ -189,7 +189,7 @@ let deleteDatakategori = (id)=>{
   <div class=" bg-white rounded-xl p-4 flex flex-col w-[600px]" >
     <div class="w-full h-full flex flex-col gap-3">
       <div class="flex flex-row justify-between items-center">
-        <div><h1 class="text-xl font-semibold text-[#2d354f]">Tambah Kategori</h1></div>
+        <div><h1 class="text-xl font-semibold text-[#2d354f]">Tambah Merek</h1></div>
         <div @click="show_modal_tambah = !show_modal_tambah" class="close p-2 rounded-lg bg-gray-100 hover:bg-gray-300 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -199,8 +199,8 @@ let deleteDatakategori = (id)=>{
       <div class="rounded-lg w-full flex items-center justify-center">
         <div class="flex flex-col gap-2 items-start w-full">
             <div class="flex flex-col w-full">
-                <label>Nama Kategori</label>
-                <input v-model="name" type="text" placeholder="Masukan Nama Kategori" class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <label>Nama Merek</label>
+                <input v-model="name" type="text" placeholder="Masukan Nama Merek" class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
             </div>
             
             <div class="flex flex-col w-full">
@@ -208,7 +208,7 @@ let deleteDatakategori = (id)=>{
                 <input v-model="description" type="text" placeholder="Diskripsi" class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
             </div>
             <div class="flex flex-row gap-2 items-center">
-                <button @click="addKategori" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+                <button @click="addMerek" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -231,7 +231,7 @@ let deleteDatakategori = (id)=>{
   <div class=" bg-white rounded-xl p-4 flex flex-col w-[600px]" >
     <div class="w-full h-full flex flex-col gap-3">
       <div class="flex flex-row justify-between items-center">
-        <div><h1 class="text-xl font-semibold text-[#2d354f]">Update Kategori "{{ single_data_kategori.name }}"</h1></div>
+        <div><h1 class="text-xl font-semibold text-[#2d354f]">Update Merek "{{ single_data_merk.name }}"</h1></div>
         <div @click="show_modal_update = !show_modal_update" class="close p-2 rounded-lg bg-gray-100 hover:bg-gray-300 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -241,8 +241,8 @@ let deleteDatakategori = (id)=>{
       <div class="rounded-lg w-full flex items-center justify-center">
         <div class="flex flex-col gap-2 items-start w-full">
             <div class="flex flex-col w-full">
-                <label>Nama Kategori</label>
-                <input v-model="name_update" type="text" placeholder="Masukan Nama Kategori" class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <label>Nama Merek</label>
+                <input v-model="name_update" type="text" placeholder="Masukan Nama Merek" class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
             </div>
             
             <div class="flex flex-col w-full">
@@ -250,7 +250,7 @@ let deleteDatakategori = (id)=>{
                 <input v-model="description_update" type="text" placeholder="Diskripsi" class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
             </div>
             <div class="flex flex-row gap-2 items-center">
-                <button :disabled="loading" @click="editKategoryData(single_data_kategori.id)" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+                <button :disabled="loading" @click="editMerekData(single_data_merk.id)" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"></path></svg>
                     </div>

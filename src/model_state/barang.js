@@ -174,14 +174,160 @@ export const barangStore = defineStore('barang',{
                 return false
             }
         },
-        async getDataKategori(){
-            this.data_category = await (await DB()).select("SELECT * from tb_category ORDER BY name ASC")
+        async getDataKategori(by_name = true){
+            
+            let order_by = ``
+            
+            if(by_name){
+                order_by = 'name ASC'
+            }else{
+                order_by = 'id DESC'
+            }
+
+            this.data_category = await (await DB()).select(`SELECT * from tb_category ORDER BY ${order_by}`)
         },
-        async getDataMerek(){
-            this.data_merek = await (await DB()).select("SELECT * from tb_merek ORDER BY name ASC")
+
+        async addDataKategori(category_name,description){
+
+           let exec = await(await DB()).execute(`INSERT INTO tb_category (name,description) VALUES ($1,$2)`,[category_name,description])
+
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
         },
-        async getDataLocation(){
-            this.data_location = await (await DB()).select("SELECT * from tb_location ORDER BY name ASC")
+
+        async updateDataKategori(name,description,id){
+        let exec = await(await DB()).execute(`UPDATE tb_category SET
+            name = $1, 
+            description = $2 WHERE id = $3 `,[name,description,id])
+
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
+        },
+
+        async checkKategoriInProducts(category_id){
+            let exec_0 = await (await DB()).select("SELECT count(*) as count from tb_product where category_id = $1",[category_id])
+            if(exec_0[0].count <= 0){
+                return true
+            }else{
+                return false
+            }
+        },
+        async deleteDataKategori(id){
+            let exec = await(await DB()).execute(`DELETE FROM tb_category WHERE id = $1`,[id])
+
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
+        },
+        async getDataMerek(by_name = true){
+            let order_by = ``
+            
+            if(by_name){
+                order_by = 'name ASC'
+            }else{
+                order_by = 'id DESC'
+            }
+
+            this.data_merek = await (await DB()).select(`SELECT * from tb_merek ORDER BY ${order_by}`)
+        },
+        async addDataMerek(category_name,description){
+           let exec = await(await DB()).execute(`INSERT INTO tb_merek (name,description) VALUES ($1,$2)`,[category_name,description])
+
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
+        },
+
+        async updateDataMerek(name,description,id){
+            let exec = await(await DB()).execute(`UPDATE tb_merek SET
+                name = $1, 
+                description = $2 WHERE id = $3 `,[name,description,id])
+
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
+        },
+
+        async checkMerekInProducts(category_id){
+            let exec_0 = await (await DB()).select("SELECT count(*) as count from tb_product where merk_id = $1",[category_id])
+            if(exec_0[0].count <= 0){
+                return true
+            }else{
+                return false
+            }
+        },
+        async deleteDataMerek(id){
+            let exec = await(await DB()).execute(`DELETE FROM tb_merek WHERE id = $1`,[id])
+
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
+        },
+
+        async getDataLocation(by_name = true){
+            let order_by = ``
+            
+            if(by_name){
+                order_by = 'name ASC'
+            }else{
+                order_by = 'id DESC'
+            }
+
+            this.data_location = await (await DB()).select(`SELECT * from tb_location ORDER BY ${order_by}`)
+        },
+        async addDataLocation(code,name,description){
+           let exec = await(await DB()).execute(`INSERT INTO tb_location (code,name,description) VALUES ($1,$2,$3)`,[code,name,description])
+
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
+        },
+        async updateDataLocation(code,name,description,id){
+            let exec = await(await DB()).execute(`UPDATE tb_location SET
+                code = $1,
+                name = $2, 
+                description = $3 WHERE id = $4 `,[code,name,description,id])
+
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
+        },
+        async checkLocationInProducts(id){
+            let exec_0 = await (await DB()).select("SELECT count(*) as count from tb_product where location_id = $1",[id])
+            console.log(exec_0[0].count);
+            
+            if(exec_0[0].count <= 0){
+                return true
+            }else{
+                return false
+            }
+        },
+        async deleteDataLocation(id){
+            let exec = await(await DB()).execute(`DELETE FROM tb_location WHERE id = $1`,[id])
+
+            if(exec.rowsAffected > 0){
+                return true
+            }else{
+                return false
+            }
         }
     }
 })

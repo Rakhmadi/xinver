@@ -34,6 +34,11 @@
       "identifier": "fs:scope",
       "allow": ["$DOCUMENT/*", "$APPDATA/**"]
     },
-    "fs:allow-remove"
+    "fs:allow-remove",
+    "core:window:default",
+    "core:window:allow-close",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
+    "core:window:allow-maximize"
   ]
 }

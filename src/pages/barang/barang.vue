@@ -25,7 +25,7 @@ let menu_active = ref("master_barang")
         </div>
         <span class="text-[#2d354f]">Kategori</span>
     </router-link>
-    <router-link to="/barang/lokasi" aria-current="page"  @click="menu_active = 'merk'" :class="menu_active == 'merk' ? 'border-[#2351e8] bg-[#b5c1e6]' : 'bg-[#d9ddeb] border-transparent'" class="no-underline router-link-active router-link-exact-active text-[#2d354f] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 hover:bg-[#b5c1e6] focus:border-b-1 cursor-pointer">
+    <router-link to="/barang/merk" aria-current="page"  @click="menu_active = 'merk'" :class="menu_active == 'merk' ? 'border-[#2351e8] bg-[#b5c1e6]' : 'bg-[#d9ddeb] border-transparent'" class="no-underline router-link-active router-link-exact-active text-[#2d354f] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 hover:bg-[#b5c1e6] focus:border-b-1 cursor-pointer">
         <div>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
@@ -42,14 +42,6 @@ let menu_active = ref("master_barang")
             </svg>
         </div>
         <span class="text-[#2d354f]">Lokasi</span>
-    </router-link>
-    <router-link to="/barang/lokasi" aria-current="page"  @click="menu_active = 'galeri'" :class="menu_active == 'galeri' ? 'border-[#2351e8] bg-[#b5c1e6]' : 'bg-[#d9ddeb] border-transparent'" class="no-underline router-link-active router-link-exact-active text-[#2d354f] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 hover:bg-[#b5c1e6] focus:border-b-1 cursor-pointer">
-        <div>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-            </svg>
-        </div>
-        <span class="text-[#2d354f]">Galeri</span>
     </router-link>
   </div>
   <!-- end child menu -->
