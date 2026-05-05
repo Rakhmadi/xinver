@@ -210,14 +210,13 @@ function highlightText(text, keyword) {
                 <option value="100">Ambil - 100</option>
             </select>
             <select v-model="order_by" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-                <option value="created_at">Urut ke Tanggal Dibuat</option>
-                <option value="updated_at">Urut ke Tanggal Diperbarui</option>
-                <option value="id">Urut ke Kode Barang</option>
-                <option value="name">Urut ke Nama</option>
-                <option value="sku">Urut ke SKU</option>
-                <option value="stock">Urut ke Stok</option>
-                <option value="price">Urut ke Harga</option>
-
+                <option value="created_at">Urutkan - Tanggal Dibuat</option>
+                <option value="updated_at">Urutkan - Tanggal Diperbarui</option>
+                <option value="id">Urutkan - Barang</option>
+                <option value="name">Urutkan - Nama</option>
+                <option value="sku">Urutkan - SKU</option>
+                <option value="stock">Urutkan - Stok</option>
+                <option value="price">Urutkan - Harga</option>
             </select>
             <button @click="order_by_desc = !order_by_desc" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                 <div v-if="order_by_desc">
@@ -286,9 +285,7 @@ function highlightText(text, keyword) {
                     <td class="px-4 py-3 text-gray-700"> {{ item.category_name }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ item.merek_name }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ `${item.location_code} - ${item.location_name}` }} </td>
-
                     <td class="px-4 py-3 text-center flex flex-row-reverse gap-2">
-
                         <router-link :to="`barang/detail_barang/${item.id}`" class="bg-[#2563EB] no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
@@ -305,7 +302,6 @@ function highlightText(text, keyword) {
         </table>
     </div>
     <div class="mt-4 text-[#2d354f] text-sm flex gap-2">
-
         <span>Halaman {{ page }} hingga {{ data_barang.data_barang.total_page }} dari {{ data_barang.data_barang.total_data }} Entri</span>
     </div>
     <div class="mt-4 flex gap-2">

@@ -64,7 +64,6 @@ let save = async()=>{
         msg_isi.value = 'Lokasi harus di isi'
     }else{
 
-        
         let exec_data_barang = await data_barang.addDataBarang(name.value,SKU.value,category_id.value,merek_id.value,location_id.value,description.value,jenis_unit.value,stock_awal.value,harga.value)
 
         if(exec_data_barang){

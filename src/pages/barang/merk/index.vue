@@ -18,6 +18,11 @@ let single_data_merk = ref({})
 
 let loading = ref(false)
 
+let order_by_desc = ref(true)
+
+let order_by = ref('tb_merek.id')
+
+
 onMounted(()=>{
     data_barang.getDataMerek(false)
 })
@@ -126,15 +131,37 @@ let callDeleteDataMerek = (id)=>{
     })
 }
     
-
+watch([order_by,order_by_desc],()=>{
+    data_barang.getDataMerek(false,order_by_desc.value,order_by.value)
+})
 </script>
 
 
 <template>
+    <h1 class="text-xl font-semibold text-[#2d354f] mb-4">List Data Merek</h1>
     <div class="flex flex-row justify-between mb-4">
-        
-        <h1 class="text-xl font-semibold text-[#2d354f]">List Data Merek</h1>
-        <div class="flex felx-row gap-2 items-center">
+        <div class="flex felx-row gap-2 items-center w-full justify-between">
+            <div class="flex flex-row items-center gap-2">
+                <select v-model="order_by" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                    <option value="tb_merek.id" selected>Select</option>
+                    <option value="product_count">Urut Total Jenis Barang</option>
+                    <option value="sum_stock">Urut Total Stock Barang</option>
+                </select>
+                <button @click="order_by_desc = !order_by_desc" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+                    <div v-if="order_by_desc">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+                        </svg>
+                    </div>
+                    <div v-else>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+                        </svg>
+                    </div>
+                    <span v-if="order_by_desc" class="text-red">Desc</span>
+                    <span v-else class="text-red">Asc</span>
+                </button>
+            </div>
             <button @click="show_modal_tambah = !show_modal_tambah" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
@@ -145,6 +172,7 @@ let callDeleteDataMerek = (id)=>{
             </button>
         </div>
     </div>
+
     <div class="overflow-x-auto bg-white rounded-xl shadow">
         <table class="min-w-full text-sm text-left">
             <!-- HEADER -->
@@ -152,6 +180,8 @@ let callDeleteDataMerek = (id)=>{
                 <tr>
                     <th class="px-4 py-3">Nama Kategori</th>
                     <th class="px-4 py-3">Diskripsi</th>
+                    <th class="px-4 py-3">Total Jenis Barang</th>
+                    <th class="px-4 py-3">Total Stock Barang</th>
                     <th class="px-4 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
@@ -161,6 +191,8 @@ let callDeleteDataMerek = (id)=>{
                 <tr v-for="(item) in data_barang.data_merek" :key="item.id" class="hover:bg-gray-50 transition">
                     <td class="px-4 py-3 font-medium text-gray-800"> {{ item.name }} </td>
                     <td class="px-4 py-3 text-gray-600">{{ item.description }}</td>
+                    <td class="px-4 py-3 text-gray-600">{{ item.product_count }}</td>
+                    <td class="px-4 py-3 text-gray-600">{{ item.sum_stock }}</td>
                     <td class="px-4 py-3 text-center flex flex-row-reverse gap-2">
                         <button @click="callDeleteDataMerek(item.id)" href="/" class="bg-[#f35757] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#ff5c5c] focus:border-b-1 text-white cursor-pointer">
                             <div>

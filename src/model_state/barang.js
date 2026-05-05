@@ -174,17 +174,26 @@ export const barangStore = defineStore('barang',{
                 return false
             }
         },
-        async getDataKategori(by_name = true){
+        async getDataKategori(by_name = true,order_by_desc = true,order_by = 'tb_category.id'){
             
-            let order_by = ``
+            let order_by_mode = ``
             
             if(by_name){
-                order_by = 'name ASC'
+                order_by_mode = 'tb_category.name ASC'
             }else{
-                order_by = 'id DESC'
+                order_by_mode = `${order_by} ${order_by_desc ? "DESC" : "ASC"}`
             }
 
-            this.data_category = await (await DB()).select(`SELECT * from tb_category ORDER BY ${order_by}`)
+            this.data_category = await (await DB()).select(`SELECT 
+                tb_category.id,
+                tb_category.name,
+                tb_category.description,
+                count(tb_category.id) as product_count,
+                sum(tb_product.stock) as sum_stock
+                from tb_category 
+                INNER JOIN tb_product on tb_product.category_id = tb_category.id
+                GROUP BY tb_category.id 
+                ORDER BY ${order_by_mode}`)
         },
 
         async addDataKategori(category_name,description){
@@ -227,16 +236,26 @@ export const barangStore = defineStore('barang',{
                 return false
             }
         },
-        async getDataMerek(by_name = true){
-            let order_by = ``
+        async getDataMerek(by_name = true,order_by_desc = true,order_by = 'tb_merek.id'){
+            
+            let order_by_mode = ``
             
             if(by_name){
-                order_by = 'name ASC'
+                order_by_mode = 'tb_merek.name ASC'
             }else{
-                order_by = 'id DESC'
+                order_by_mode = `${order_by} ${order_by_desc ? "DESC" : "ASC"}`
             }
 
-            this.data_merek = await (await DB()).select(`SELECT * from tb_merek ORDER BY ${order_by}`)
+            this.data_merek = await (await DB()).select(`SELECT 
+                tb_merek.id,
+                tb_merek.name,
+                tb_merek.description,
+                count(tb_merek.id) as product_count,
+                sum(tb_product.stock) as sum_stock
+                from tb_merek 
+                INNER JOIN tb_product on tb_product.merk_id = tb_merek.id
+                GROUP BY tb_merek.id 
+                ORDER BY ${order_by_mode}`)
         },
         async addDataMerek(category_name,description){
            let exec = await(await DB()).execute(`INSERT INTO tb_merek (name,description) VALUES ($1,$2)`,[category_name,description])
@@ -278,16 +297,25 @@ export const barangStore = defineStore('barang',{
             }
         },
 
-        async getDataLocation(by_name = true){
-            let order_by = ``
+        async getDataLocation(by_name = true,order_by_desc = true,order_by = 'tb_location.id'){
+            let order_by_mode = ``
             
             if(by_name){
-                order_by = 'name ASC'
+                order_by_mode = 'tb_location.name ASC'
             }else{
-                order_by = 'id DESC'
+                order_by_mode = `${order_by} ${order_by_desc ? "DESC" : "ASC"}`
             }
 
-            this.data_location = await (await DB()).select(`SELECT * from tb_location ORDER BY ${order_by}`)
+            this.data_location = await (await DB()).select(`SELECT 
+                tb_location.id,
+                tb_location.code,
+                tb_location.name,
+                tb_location.description,
+                count(tb_location.id) as product_count,
+                sum(tb_product.stock) as sum_stock
+                from tb_location 
+                INNER JOIN tb_product on tb_product.location_id = tb_location.id
+                GROUP BY tb_location.id ORDER BY ${order_by_mode}`)
         },
         async addDataLocation(code,name,description){
            let exec = await(await DB()).execute(`INSERT INTO tb_location (code,name,description) VALUES ($1,$2,$3)`,[code,name,description])
