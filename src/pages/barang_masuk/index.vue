@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
 import {barangMasukStore} from '../../model_state/barang_masuk.js'
+import { formatRupiah } from '../../helper_function.js'
 
 
 let data_barang_masuk = barangMasukStore()
@@ -60,8 +61,8 @@ watch([search,date,order_by_desc,order_by,take],()=>{
     <div><h1 class="mb-4">List Data Transaksi Barang Masuk</h1></div>
     <div class="mb-4 flex flex-row items-center justify-between">
         <div class="flex flex-row gap-2">
-                <input v-model="search" type="text" placeholder="Kode (TR-IN-XXXX) Atau Nama Suplier" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-                <input v-model="date" type="date" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <input v-model="search" type="text" placeholder="Kode Atau Nama Suplier" class="w-[250px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <input v-model="date" type="date" class="w-[160px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <select v-model="take" class="w-[120px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                     <option default value="10">Ambil - 10</option>
                     <option value="20">Ambil - 20</option>
@@ -72,7 +73,9 @@ watch([search,date,order_by_desc,order_by,take],()=>{
                     <option value="tb_header_transaction_in.id" default>Urutkan Kode Transaksi</option>
                     <option value="tb_header_transaction_in.date">Urutkan Tanggal</option>
                     <option value="product_count">Urutkan Total Jenis Barang</option>
-                    <option value="sum_qty_detail">Urutkan Total Stock Barang</option>
+                    <option value="sum_qty_detail">Urutkan Total QTY Barang</option>
+                    <option value="all_total_price">Urutkan Total Harga</option>
+
                 </select>
                 <button @click="order_by_desc = !order_by_desc" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                     <div v-if="order_by_desc">
@@ -96,9 +99,13 @@ watch([search,date,order_by_desc,order_by,take],()=>{
                     </div>
                     <span class="text-red">Reset</span>
                 </button>
+                <div class="flex flex-row gap-2 items-center" v-show="data_barang_masuk.loading">
+                    <div class="w-5 h-5 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    <span>Memuat Data ....</span>
+                </div>
         </div>
         <div>
-            <router-link to="/" class="bg-[#2563EB] no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+            <router-link to="/tambah_transaksi_masuk" class="bg-[#2563EB] no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -117,9 +124,9 @@ watch([search,date,order_by_desc,order_by,take],()=>{
                         <th class="px-4 py-3">Kode Transaksi</th>
                         <th class="px-4 py-3">Tanggal Transaksi</th>
                         <th class="px-4 py-3">Nama Suplier</th>
-                        <th class="px-4 py-3">Deskripsi</th>
                         <th class="px-4 py-3">Total Jenis Barang</th>
                         <th class="px-4 py-3">Total QTY Barang</th>
+                        <th class="px-4 py-3">Total Harga</th>
                         <th class="px-4 py-3 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -130,11 +137,11 @@ watch([search,date,order_by_desc,order_by,take],()=>{
                         <td class="px-4 py-3 font-medium text-gray-800" v-html="highlightText(item.code_transaction,search)"></td>
                         <td class="px-4 py-3 text-gray-600">{{ item.date }}</td>
                         <td class="px-4 py-3 text-gray-600" v-html="highlightText(item.name,search)"></td>
-                        <td class="px-4 py-3 text-gray-600">{{ item.description }}</td>
                         <td class="px-4 py-3 text-gray-600">{{ item.product_count }}</td>
                         <td class="px-4 py-3 text-gray-600">{{ item.sum_qty_detail }}</td>
+                        <td class="px-4 py-3 text-gray-600">{{ formatRupiah(item.all_total_price) }}</td>
                         <td class="px-4 py-3 text-center flex flex-row-reverse gap-2">
-                            <router-link :to="`barang/detail_barang/${item.id}`" class="bg-[#2563EB] no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+                            <router-link :to="`detail_transaksi_masuk/${item.id}`" class="bg-[#2563EB] no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                                 <div>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />

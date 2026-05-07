@@ -49,17 +49,6 @@ onMounted(async ()=>{
 
 })
 
-let deleteBarang = ()=>{
-    Tutut.danger({
-	    title : "Hapus Data?",
-	    text : "Data yang sudah dihapus tidak dapat dikembalikan lagi. Apakah Anda yakin ingin melanjutkan?"
-    },{
-        showConfirm : true,
-        onConfirm : ()=>{ alert("Confirm Success") },
-        onCancel : ()=>{ alert("Cancel Success") }
-      })
-}
-
 
 let closeParentModal = (event)=>{
   if(event.target === event.currentTarget){
@@ -214,14 +203,15 @@ let onErrorImage = (event)=>{
   event.onerror = null
   event.target.src = ImgNotFound
 }
+
+
 </script>
 
 <template>
 <div class="">
   <div class=" mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
-
     <!-- Header -->
-    <div class="bg-[#d9ddeb] px-6 py-5 flex flex-row justify-between items-center">
+    <div class="bg-[#eceef7] px-6 py-5 flex flex-row justify-between items-center">
       <div>
         <h1 class="text-xl font-bold text-[#2d354f]">
           Detail Barang "{{ data_barang.single_data_barang.code_barang }}" Dengan SKU "{{ data_barang.single_data_barang.sku }}"

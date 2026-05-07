@@ -48,6 +48,14 @@ const routes = [
     name : 'barang_masuk',
     component : ()=> import('./pages/barang_masuk/index.vue')
   },{
+    path : '/tambah_transaksi_masuk',
+    name : 'tambah_transaksi_masuk',
+    component : ()=> import('./pages/barang_masuk/tambah_barang_masuk.vue')
+  },{
+    path : '/detail_transaksi_masuk/:id',
+    name : 'detail_transaksi_masuk',
+    component : ()=> import('./pages/barang_masuk/detail.vue')
+  },{
     path : "/settings",
     name : "settings", 
     component : ()=> import('./pages/Setting.vue')

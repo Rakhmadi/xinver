@@ -110,7 +110,7 @@ let save = async()=>{
     </div>
     <form>
 
-        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
                 <div class="flex flex-col">
                     <lable class="font-medium text-md">Nama Barang</lable>

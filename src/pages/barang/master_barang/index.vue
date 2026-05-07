@@ -181,23 +181,23 @@ function highlightText(text, keyword) {
     <h1 class="text-xl text-[#2d354f] font-semibold mb-4">List Data Barang</h1>
     <div class="flex justify-between mb-4">
         <div class=" gap-2 flex flex-row w-[50%] items-center grow">
-            <input v-model="search" type="text" placeholder="Cari Kode - Nama Barang - SKU" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+            <input v-model="search" type="text" placeholder="Cari Kode - Nama Barang - SKU" class="w-[250px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
             <div class="relative">
-                <input type="text" v-model="kategori" placeholder="Kategori" @click="show_kategori = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <input type="text" v-model="kategori" placeholder="Kategori" @click="show_kategori = true" @blur="blurAwait" class="w-[170px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <div v-show="show_kategori" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
                     <li v-for="item in filtered_category" @click="selectKategori(item.name,item.id),show_kategori = true " :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">{{ item.name }}</li>   
                     <li v-if="filtered_category.length === 0" class="list-none mx-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
                 </div>
             </div>
             <div class="relative">
-                <input type="text" v-model="merek" placeholder="Merek" @click="show_merek = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <input type="text" v-model="merek" placeholder="Merek" @click="show_merek = true" @blur="blurAwait" class="w-[170px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <div v-show="show_merek" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
                     <li  v-for="item in filtered_merek" @click="selectMerek(item.name,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">{{ item.name }}</li>   
                     <li v-if="filtered_merek.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
                 </div>
             </div>
             <div class="relative">
-                <input type="text" v-model="location" placeholder="Location" @click="show_location = true" @blur="blurAwait" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                <input type="text" v-model="location" placeholder="Location" @click="show_location = true" @blur="blurAwait" class="w-[170px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <div v-show="show_location" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
                     <li  v-for="item in filtered_location" @click="selectLocation(item.code,`${item.code} - ${item.name}`,item.id)" :key="item" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2"> {{item.code}} - {{ item.name }}</li>   
                     <li v-if="filtered_location.length === 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Data tidak di temukan</li>
