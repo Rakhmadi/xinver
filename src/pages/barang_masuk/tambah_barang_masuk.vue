@@ -267,69 +267,69 @@ let clearDetail = ()=>{
                     </button>
                 </div>
             </div>
+
+            <div class="overflow-x-auto bg-white rounded-xl shadow mt-4">
+                <table class="min-w-full text-sm text-left">
+                
+                <!-- HEADER -->
+                <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+                    <tr>
+                    <th class="px-4 py-3">Kode Barang </th>
+                    <th class="px-4 py-3">Nama Barang</th>
+                    <th class="px-4 py-3">SKU</th>
+                    <th class="px-4 py-3">QTY</th>
+                    <th class="px-4 py-3">Harga</th>
+                    <th class="px-4 py-3">Subtotal</th>
+                    <th class="px-4 py-3 text-center">Aksi</th>
+                    </tr>
+                </thead>
+
+                <!-- BODY -->
+                <tbody class="divide-y divide-gray-200">
+
+                    <!-- ROW -->
+                    <tr v-for="(item,index) in data_transaksi_detail_barang" :key="index" class="hover:bg-gray-50 transition">
+                        <!-- NAMA -->
+                        <td class="px-4 py-3 font-medium text-gray-800" >
+                            {{ item.kode_barang }}
+                        </td>
+                        <td class="px-4 py-3 font-medium text-gray-800" >
+                            {{ item.nama_barang }}
+                        </td>
+                        <td class="px-4 py-3 font-medium text-gray-800" >
+                            {{ item.sku }}
+                        </td>
+                        <td class="px-4 py-3 font-medium text-gray-800" >
+                            {{ item.qty }}
+                        </td>
+                        <td class="px-4 py-3 font-medium text-gray-800" >
+                            {{ formatRupiah(item.harga) }}
+                        </td>
+                        <td class="px-4 py-3 font-medium text-gray-800" >
+                            {{ formatRupiah(item.qty*item.harga) }}
+                        </td>
+                        <td>
+                            <button @click="removeBarangDetail(index)" class="bg-[#f35757] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#ff5c5c] focus:border-b-1 text-white cursor-pointer">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                    </svg>
+                                </div>
+                                <span class="text-red">Hapus</span>
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+                </table>
+            </div>
+
+            <div class="flex flex-row-reverse my-4">
+                <h3>Total Harga  {{formatRupiah(total_harga_detail_barang)}}</h3>
+            </div>
         </div>
 
-
-    <div class="overflow-x-auto bg-white rounded-xl shadow mt-4">
-        <table class="min-w-full text-sm text-left">
-        
-        <!-- HEADER -->
-        <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
-            <tr>
-            <th class="px-4 py-3">Kode Barang </th>
-            <th class="px-4 py-3">Nama Barang</th>
-            <th class="px-4 py-3">SKU</th>
-            <th class="px-4 py-3">QTY</th>
-            <th class="px-4 py-3">Harga</th>
-            <th class="px-4 py-3">Subtotal</th>
-            <th class="px-4 py-3 text-center">Aksi</th>
-            </tr>
-        </thead>
-
-        <!-- BODY -->
-        <tbody class="divide-y divide-gray-200">
-
-            <!-- ROW -->
-            <tr v-for="(item,index) in data_transaksi_detail_barang" :key="index" class="hover:bg-gray-50 transition">
-                <!-- NAMA -->
-                <td class="px-4 py-3 font-medium text-gray-800" >
-                    {{ item.kode_barang }}
-                </td>
-                <td class="px-4 py-3 font-medium text-gray-800" >
-                    {{ item.nama_barang }}
-                </td>
-                <td class="px-4 py-3 font-medium text-gray-800" >
-                    {{ item.sku }}
-                </td>
-                <td class="px-4 py-3 font-medium text-gray-800" >
-                    {{ item.qty }}
-                </td>
-                <td class="px-4 py-3 font-medium text-gray-800" >
-                    {{ formatRupiah(item.harga) }}
-                </td>
-                <td class="px-4 py-3 font-medium text-gray-800" >
-                    {{ formatRupiah(item.qty*item.harga) }}
-                </td>
-                <td>
-                    <button @click="removeBarangDetail(index)" class="bg-[#f35757] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#ff5c5c] focus:border-b-1 text-white cursor-pointer">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                            </svg>
-                        </div>
-                        <span class="text-red">Hapus</span>
-                    </button>
-                </td>
-            </tr>
-
-        </tbody>
-        </table>
-    </div>
-
-    <div class="flex flex-row-reverse my-4">
-        <h3>Total Harga  {{formatRupiah(total_harga_detail_barang)}}</h3>
-    </div>
-    <button @click.prevent="saveTransaksiMasuk" class="bg-[#2563EB] no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+    <button @click.prevent="saveTransaksiMasuk" class="bg-[#2563EB] mt-4 no-underline text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
         <span class="text-red">Simpan Transaksi Masuk</span>
     </button>
 </template>

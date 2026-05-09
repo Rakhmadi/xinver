@@ -45,13 +45,14 @@ export const barangStore = defineStore('barang',{
                 tb_merek.name AS merek_name,
                 tb_location.name AS location_name,
                 tb_location.code AS location_code,
-                tb_product.created_at AS created_at
+                tb_product.created_at AS created_at,
+                (tb_product.price * tb_product.stock) as total_harga
                 FROM tb_product 
                 LEFT JOIN tb_category ON tb_category.id = tb_product.category_id 
                 LEFT JOIN tb_merek ON tb_merek.id = tb_product.merk_id
                 LEFT JOIN tb_location ON tb_location.id = tb_product.location_id
                 where 1=1 ${or_search} ${conditional_kategori_id}  ${conditional_merek_id}  ${conditional_location_id}   
-                ORDER BY tb_product.${order_by} ${order_by_is_desc}
+                ORDER BY ${order_by} ${order_by_is_desc}
                 LIMIT ${take_data} offset (${page_now} - 1) * ${take_data}`
         
 

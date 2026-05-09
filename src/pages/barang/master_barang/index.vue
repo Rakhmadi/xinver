@@ -25,7 +25,7 @@ let location = ref("")
 let location_code = ref("")
 let location_id = ref('')
 let order_by_desc = ref(true)
-let order_by = ref('created_at')
+let order_by = ref('tb_product.created_at')
 let take = ref(10)
 let page = ref(1)
 // let filtered_category = ref([])
@@ -210,13 +210,14 @@ function highlightText(text, keyword) {
                 <option value="100">Ambil - 100</option>
             </select>
             <select v-model="order_by" class="w-[200px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-                <option value="created_at">Urutkan - Tanggal Dibuat</option>
-                <option value="updated_at">Urutkan - Tanggal Diperbarui</option>
-                <option value="id">Urutkan - Barang</option>
-                <option value="name">Urutkan - Nama</option>
-                <option value="sku">Urutkan - SKU</option>
-                <option value="stock">Urutkan - Stok</option>
-                <option value="price">Urutkan - Harga</option>
+                <option value="tb_product.created_at">Urutkan - Tanggal Dibuat</option>
+                <option value="tb_product.updated_at">Urutkan - Tanggal Diperbarui</option>
+                <option value="tb_product.id">Urutkan - Barang</option>
+                <option value="tb_product.name">Urutkan - Nama</option>
+                <option value="tb_product.sku">Urutkan - SKU</option>
+                <option value="tb_product.stock">Urutkan - Stok</option>
+                <option value="tb_product.price">Urutkan - Harga</option>
+                <option value="total_harga">Urutkan - Total Harga</option>=
             </select>
             <button @click="order_by_desc = !order_by_desc" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                 <div v-if="order_by_desc">
@@ -266,6 +267,7 @@ function highlightText(text, keyword) {
                     <th class="px-4 py-3">SKU</th>
                     <th class="px-4 py-3">Stok</th>
                     <th class="px-4 py-3">Harga</th>
+                    <th class="px-4 py-3">Total Harga</th>
                     <th class="px-4 py-3">Kategori</th>
                     <th class="px-4 py-3">Merek</th>
                     <th class="px-4 py-3">Location</th>
@@ -282,6 +284,7 @@ function highlightText(text, keyword) {
                     <td class="px-4 py-3">
                     <span class="px-2 py-1 text-xs rounded" :class="item.product_stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"> {{ item.product_stock }} </span> - {{ item.product_unit }}</td>
                     <td class="px-4 py-3 text-gray-700"> {{ formatRupiah(item.product_price) }} </td>
+                    <td class="px-4 py-3 text-gray-700"> {{ formatRupiah(item.total_harga) }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ item.category_name }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ item.merek_name }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ `${item.location_code} - ${item.location_name}` }} </td>

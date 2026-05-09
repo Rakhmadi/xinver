@@ -178,7 +178,7 @@ watch([order_by,order_by_desc],()=>{
             <!-- HEADER -->
             <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
                 <tr>
-                    <th class="px-4 py-3">Nama Kategori</th>
+                    <th class="px-4 py-3">Nama Merek</th>
                     <th class="px-4 py-3">Diskripsi</th>
                     <th class="px-4 py-3">Total Jenis Barang</th>
                     <th class="px-4 py-3">Total Stock Barang</th>

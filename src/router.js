@@ -43,7 +43,9 @@ const routes = [
         component : () => import("./pages/barang/lokasi/index.vue")
       }
     ]
-  },{
+  },
+  // barang masuk router
+  {
     path : '/barang_masuk',
     name : 'barang_masuk',
     component : ()=> import('./pages/barang_masuk/index.vue')
@@ -55,11 +57,22 @@ const routes = [
     path : '/detail_transaksi_masuk/:id',
     name : 'detail_transaksi_masuk',
     component : ()=> import('./pages/barang_masuk/detail.vue')
-  },{
+  },
+  // barang keluaar router
+  {
+    path : '/barang_keluar',
+    name : 'barang_keluar',
+    component : ()=> import('./pages/barang_keluar/index.vue')
+  },
+  {
     path : "/settings",
     name : "settings", 
     component : ()=> import('./pages/Setting.vue')
-  },
+  },{
+    path : '/supplier',
+    name : 'supplier',
+    component : ()=> import('./pages/suplier/index.vue')
+  }
 ]
 
 export const router = createRouter({
