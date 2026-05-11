@@ -175,14 +175,16 @@ export const barangStore = defineStore('barang',{
                 return false
             }
         },
-        async getDataKategori(by_name = true,order_by_desc = true,order_by = 'tb_category.id'){
+        async getDataKategori(search = '', by_name = true,order_by_desc = true,order_by = 'tb_category.id'){
             
             let order_by_mode = ``
+            let search_mode = ''
             
             if(by_name){
                 order_by_mode = 'tb_category.name ASC'
             }else{
                 order_by_mode = `${order_by} ${order_by_desc ? "DESC" : "ASC"}`
+                search_mode = `WHERE tb_category.name LIKE '%${search}%'`
             }
 
             this.data_category = await (await DB()).select(`SELECT 
@@ -193,6 +195,7 @@ export const barangStore = defineStore('barang',{
                 sum(tb_product.stock) as sum_stock
                 from tb_category 
                 INNER JOIN tb_product on tb_product.category_id = tb_category.id
+                ${search_mode}
                 GROUP BY tb_category.id 
                 ORDER BY ${order_by_mode}`)
         },
@@ -237,14 +240,16 @@ export const barangStore = defineStore('barang',{
                 return false
             }
         },
-        async getDataMerek(by_name = true,order_by_desc = true,order_by = 'tb_merek.id'){
+        async getDataMerek(search = '', by_name = true,order_by_desc = true,order_by = 'tb_merek.id'){
             
             let order_by_mode = ``
-            
+            let search_mode = ''
+
             if(by_name){
                 order_by_mode = 'tb_merek.name ASC'
             }else{
                 order_by_mode = `${order_by} ${order_by_desc ? "DESC" : "ASC"}`
+                search_mode = `WHERE tb_merek.name LIKE '%${search}%'`
             }
 
             this.data_merek = await (await DB()).select(`SELECT 
@@ -255,6 +260,7 @@ export const barangStore = defineStore('barang',{
                 sum(tb_product.stock) as sum_stock
                 from tb_merek 
                 INNER JOIN tb_product on tb_product.merk_id = tb_merek.id
+                ${search_mode} 
                 GROUP BY tb_merek.id 
                 ORDER BY ${order_by_mode}`)
         },
@@ -298,13 +304,15 @@ export const barangStore = defineStore('barang',{
             }
         },
 
-        async getDataLocation(by_name = true,order_by_desc = true,order_by = 'tb_location.id'){
+        async getDataLocation(search = '', by_name = true,order_by_desc = true,order_by = 'tb_location.id'){
             let order_by_mode = ``
-            
+            let search_mode = ''
+
             if(by_name){
                 order_by_mode = 'tb_location.name ASC'
             }else{
                 order_by_mode = `${order_by} ${order_by_desc ? "DESC" : "ASC"}`
+                search_mode = `WHERE tb_location.code LIKE '%${search}%' OR tb_location.name LIKE '%${search}%'`
             }
 
             this.data_location = await (await DB()).select(`SELECT 
@@ -316,6 +324,7 @@ export const barangStore = defineStore('barang',{
                 sum(tb_product.stock) as sum_stock
                 from tb_location 
                 INNER JOIN tb_product on tb_product.location_id = tb_location.id
+                ${search_mode}
                 GROUP BY tb_location.id ORDER BY ${order_by_mode}`)
         },
         async addDataLocation(code,name,description){

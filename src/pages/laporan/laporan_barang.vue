@@ -1,0 +1,3 @@
+<template>
+    laporan barang
+</template>

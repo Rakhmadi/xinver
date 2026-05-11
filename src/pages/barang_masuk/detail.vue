@@ -155,9 +155,13 @@ let deleteCancelTransaksi = ()=>{
                     </table>
         </div>
         <div class="flex flex-row-reverse mb-4">
-            <h3>Total Harga  {{formatRupiah(data_barang_masuk.data_single_barang_masuk.total_harga)}}</h3>
-            
+            <div class="bg-gray-100 rounded-xl px-4 py-3">
+                <h3 class="font-semibold text-gray-700">
+                    Total Harga  {{formatRupiah(data_barang_masuk.data_single_barang_masuk.total_harga)}}
+                </h3>
+            </div>
         </div>
+        
     </div>
     <!-- Footer -->
   </div>

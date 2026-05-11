@@ -22,6 +22,8 @@ let order_by_desc = ref(true)
 
 let order_by = ref('tb_merek.id')
 
+let search = ref('')
+
 
 onMounted(()=>{
     data_barang.getDataMerek(false)
@@ -131,8 +133,8 @@ let callDeleteDataMerek = (id)=>{
     })
 }
     
-watch([order_by,order_by_desc],()=>{
-    data_barang.getDataMerek(false,order_by_desc.value,order_by.value)
+watch([search,order_by,order_by_desc],()=>{
+    data_barang.getDataMerek(search.value,false,order_by_desc.value,order_by.value)
 })
 </script>
 
@@ -142,10 +144,11 @@ watch([order_by,order_by_desc],()=>{
     <div class="flex flex-row justify-between mb-4">
         <div class="flex felx-row gap-2 items-center w-full justify-between">
             <div class="flex flex-row items-center gap-2">
+                <input v-model="search" type="text" placeholder="Cari Merek" class="w-[250px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                 <select v-model="order_by" class="w-[300px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
                     <option value="tb_merek.id" selected>Select</option>
-                    <option value="product_count">Urut Total Jenis Barang</option>
-                    <option value="sum_stock">Urut Total Stock Barang</option>
+                    <option value="product_count">Urutkan Total Jenis Barang</option>
+                    <option value="sum_stock">Urutkan Total Stock Barang</option>
                 </select>
                 <button @click="order_by_desc = !order_by_desc" class="bg-[#2563EB] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
                     <div v-if="order_by_desc">

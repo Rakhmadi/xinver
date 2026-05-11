@@ -13,6 +13,9 @@ import 'vue-image-zoomer/dist/style.css';
 
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
+import VueApexCharts from "vue3-apexcharts";
+
+
 const pinia = createPinia()
 
 pinia.use(piniaPluginPersistedstate )
@@ -22,4 +25,5 @@ createApp(App)
 .use(createPinia())
 .use(VueImageZoomer)
 .use(pinia)
+.use(VueApexCharts)
 .component('QuillEditor', QuillEditor).mount("#app");

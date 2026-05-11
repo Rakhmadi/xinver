@@ -101,9 +101,6 @@ let addBarangDetail = ()=>{
     }else if(qty.value === 0){
         show_msg.value = true
         content_msg.value = 'Qty Harus Lebih Dari 0'
-    }else if(harga.value === 0){
-        show_msg.value = true
-        content_msg.value = 'Harga Harus Lebih Dari 0'
     }else{
         barang_masuk_store.addDetailTransakiBarangMasuk(single_data_product.value,qty.value,harga.value)
         qty.value = 0
@@ -233,7 +230,7 @@ let clearDetail = ()=>{
                         </div>
                         <div v-show="show_barang_drop" class="absolute bg-[#e4edff] rounded-lg w-full mt-2 py-2 overflow-y-auto h-[250px]">
                             <li v-for="item in data_barang" :key="item.id" @click="clickItemBarang(item)" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">{{ item.code_barang }} - {{ item.sku }} - {{ item.name }}</li>
-                            <li v-if="data_barang.length <= 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Supplier Not Found</li>
+                            <li v-if="data_barang.length <= 0" class="list-none px-4 hover:bg-[#c6d9ff] cursor-pointer py-2">Barang Not Found</li>
                         </div>
                 </div>
                 <div>

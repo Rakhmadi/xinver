@@ -145,7 +145,8 @@ let deleteSupplierCLikc = async(id)=>{
 
 
 <template>
-    <h1 class="text-xl font-semibold text-[#2d354f] mb-4">List Data Supplier</h1>
+
+    <h1 class="mb-4">List Data Supplier</h1>
     <div class="flex flex-row justify-between mb-4">
         <div class="flex felx-row gap-2 items-center w-full justify-between">
             <div class="flex flex-row items-center gap-2">
@@ -192,7 +193,7 @@ let deleteSupplierCLikc = async(id)=>{
                     <th class="px-4 py-3">Email</th>
                     <th class="px-4 py-3">Nomor Phone</th>
                     <th class="px-4 py-3">Alamat</th>
-                    <th class="px-4 py-3">Total Transaksi Masuk</th>
+                    <th class="px-4 py-3">Total Transaksi</th>
                     <th class="px-4 py-3 text-center">Aksi</th>
                 </tr>
             </thead>

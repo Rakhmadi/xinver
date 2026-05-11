@@ -63,6 +63,14 @@ const routes = [
     path : '/barang_keluar',
     name : 'barang_keluar',
     component : ()=> import('./pages/barang_keluar/index.vue')
+  },{
+    path : '/tambah_transaksi_keluar',
+    name : 'tambah_transaksi_keluar',
+    component : ()=> import('./pages/barang_keluar/tambah_barang_keluar.vue')
+  },{
+    path : '/detail_barang_keluar/:id',
+    name : '/detail_barang_keluar',
+    component : ()=> import('./pages/barang_keluar/detail.vue')
   },
   {
     path : "/settings",
@@ -72,6 +80,29 @@ const routes = [
     path : '/supplier',
     name : 'supplier',
     component : ()=> import('./pages/suplier/index.vue')
+  },{
+    path : '/laporan',
+    name : 'laporan',
+    component : ()=> import('./pages/laporan/index.vue'),
+    children : [
+      {
+        path : '',
+        name : 'laporan_barang',
+        component : ()=>import('./pages/laporan/laporan_barang.vue')
+      },{
+        path : 'laporan_barang_masuk',
+        name : 'laporan_barang_masuk',
+        component : ()=>import('./pages/laporan/laporan_barang_masuk.vue')
+      },{
+        path : 'laporan_barang_keluar',
+        name : 'laporan_barang_keluar',
+        component : ()=>import('./pages/laporan/laporan_barang_keluar.vue')
+      },{
+        path : 'laporan_stock_menipis',
+        name : 'laporan_stock_menipis',
+        component : ()=>import('./pages/laporan/laporan_stock_menipis.vue')
+      }
+    ]
   }
 ]
 

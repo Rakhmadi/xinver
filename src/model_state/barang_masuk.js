@@ -1,7 +1,5 @@
 import { defineStore } from "pinia";
 import { DB } from "../db";
-import { BaseDirectory ,remove} from '@tauri-apps/plugin-fs'
-
 
 export const barangMasukStore = defineStore('barang_masuk',{
     state:()=>{
@@ -130,7 +128,7 @@ export const barangMasukStore = defineStore('barang_masuk',{
             this.data_barang = await(await DB()).select(raw_query)
         },
         async addDetailTransakiBarangMasuk(item_single_data_barang,qty,harga){
-            console.log('------------',item_single_data_barang);
+
             
             this.data_transaksi_detail_barang.push({
                 id_barang : item_single_data_barang.id,
@@ -161,7 +159,7 @@ export const barangMasukStore = defineStore('barang_masuk',{
                 
                 let select_single_header = await(await DB()).select(`SELECT * FROM tb_header_transaction_in WHERE id = ${exec_create_header.lastInsertId}`)
                 select_single_header = select_single_header[0]
-                console.log("=====++",select_single_header);
+                
                 this.data_transaksi_detail_barang.forEach(async(x)=>{
                      let exec_0 = await(await DB()).execute(`INSERT INTO tb_detail_transaction_in 
                         (transaction_in_id,product_id,qty,price) 
