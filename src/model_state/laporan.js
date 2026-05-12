@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { DB } from "../db";
 
-export const homeStore = defineStore('home',{
+export const laporanStore = defineStore('laporan',{
     state : () =>{
         return {
             data_reprot_barang : []

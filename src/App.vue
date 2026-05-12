@@ -5,6 +5,11 @@ import { appDataDir } from '@tauri-apps/api/path';
 import { useRoute } from 'vue-router'
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import Tutut from 'tutut';
+import bcrypt from 'bcryptjs'
+import { authStore } from './model_state/auth.js'
+
+let auth_store = authStore()
+
 const appWindow = getCurrentWindow();
 
 appWindow.maximize()
@@ -14,6 +19,9 @@ let db = ref()
 
 let is_logged = ref(false)
 let menu = ref("")
+
+let password = ref('')
+
 let list_menu = ref([
     { 
         name: "Home",
@@ -50,6 +58,17 @@ let list_menu = ref([
 onMounted(async()=>{
 
 
+const salt = await bcrypt.genSalt(10)
+
+const password = '123456'
+
+const hash = await bcrypt.hash(
+  password,
+  salt
+)
+
+console.log(hash);
+
 
 try {
     initDatabase()
@@ -59,8 +78,6 @@ try {
 }
       
     
-    is_logged.value = "true"
-    //    is_logged.value = String(localStorage.getItem('is_logged'))
 
 
     const appDataDirPath = await appDataDir();
@@ -95,14 +112,27 @@ let clickCloseWindow = ()=>{
     },{
         showConfirm : true,
         onConfirm : ()=>{
+            auth_store.Logout()
+            password.value = ''
             appWindow.close()
         }
     })
 }
+
+let login = async()=>{
+    auth_store.login(password.value)
+    password.value = ''
+}
+
+let logout = ()=>{
+    auth_store.Logout()
+    password.value = ''
+}
+
 </script>
 
 <template>
-<section v-if="true" class="flex flex-col h-screen">
+<section v-if="auth_store.is_login" class="flex flex-col h-screen">
         <div class="nav fixed w-full z-40 ">
             <div class="py-4 px-4 bg-[#2563EB] flex flex-row justify-between items-center " >
                 <div>
@@ -130,13 +160,13 @@ let clickCloseWindow = ()=>{
                             </router-link>
                         </li>
                         <li class="">
-                            <router-link  @click="menu = 'settings'" :class="menu === 'settings' ? 'bg-[#1E40AF]' : 'bg-[#2351e8]'" class=" no-underline flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF]  text-white">
+                            <button  @click="logout" :class="menu === 'settings' ? 'bg-[#1E40AF]' : 'bg-[#2351e8]'" class=" no-underline flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF]  text-white">
                                 <span class=" text-sm text-red">Logout</span> 
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
                                 </svg>
 
-                            </router-link>
+                            </button>
                         </li>
                     </ul>
                     <button @click="clickMinimize" class="bg bg-[#2351e8] no-underline flex flex-row items-center rounded-full py-1 px-1 gap-1 border-1 border-transparent cursor-pointer hover:bg-[#1E40AF]  text-white">
@@ -167,14 +197,16 @@ let clickCloseWindow = ()=>{
                     Xinver Secure Access
                 </h2>
                 <div class="mb-4">
-                    <label class="block text-sm text-gray-600 mb-1">Password</label>
                     
                     <div class="relative">
-                        <input id="password" type="password" placeholder="Enter password" class=" bg-[#e4edff] w-full px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input v-model="password" id="password" type="password" placeholder="Password default (123456)" class=" bg-[#e4edff] w-full px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <button type="button" @click="togglePassword" class="absolute right-3 top-2.5 text-gray-500 text-sm cursor-pointer">Show</button>
                     </div>
                 </div>
-                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-full transition duration-200 cursor-pointer">Login</button>
+                <div class="flex flex-row gap-2">
+                    <button @click="login" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-full transition duration-200 cursor-pointer">Login</button>
+                    <button @click="appWindow.close()" class="w-full bg-blue-400 hover:bg-blue-700 text-white py-2 rounded-full transition duration-200 cursor-pointer">Keluar</button>
+                </div>
             </div>
         </div>
     </section>

@@ -1,17 +1,80 @@
+<script setup>
+import { ref } from 'vue'
+import { authStore } from '../model_state/auth.js'
+import Tutut from 'tutut'
+import { appDataDir } from '@tauri-apps/api/path';
+import { revealItemInDir } from '@tauri-apps/plugin-opener';
+
+
+let new_pass = ref('')
+let repeat_password = ref('')
+let old_password = ref('')
+
+let msg = ref(false)
+let msg_content = ref('')
+
+
+let auth_store = authStore()
+
+let cangePAssword = async()=>{
+    if(new_pass.value.length < 6){
+        msg.value = true
+        msg_content.value = 'Password Harus Lebih dari 5'
+    }else if(new_pass.value != repeat_password.value){
+        msg.value = true
+        msg_content.value = 'Password Baru Harus Sama Dengan Verifikasi Password'
+    }else{ 
+        auth_store.changePassword(repeat_password.value,old_password.value).then((result)=>{
+            console.log(result)
+            if(result){
+
+                console.log(result)
+                Tutut.info({
+                    title : 'Pesan',
+                    text : 'Password Bewrhasil Di Ubah'
+                })
+
+                setTimeout(()=>{
+                    auth_store.Logout()
+                },2000)
+            }else{
+                msg.value = true      
+                msg_content.value = 'Gagal! Password Kemungkinan Salah'
+            }
+        })
+    }
+}
+
+let buka = async()=>{
+
+    const appDataDirPath = await appDataDir();
+
+    await revealItemInDir(appDataDirPath+'\\');
+
+}
+
+</script>
+
 <template>
     <div>
         <h1 class="text-3xl pb-6 text-[#2d354f]">Pengaturan</h1>
         <h2 class="text-xl pb-4 pt-2 text-[#2d354f]">Ubah Password</h2>
+        <lable class="text-red-500 text-sm" v-show="msg">{{ msg_content }}</lable>
         <div class="flex w-[50%] gap-2">
-            <input type="text" placeholder="Password Baru" class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-            <input type="text" placeholder="Verifikasi Password Baru" class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-            <input type="password" placeholder="Password" class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
-        <button href="/" class="bg-[hsl(221,83%,53%)] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
-            <span class="text-red">Ubah</span>
-        </button>
+            <input type="text" v-model="new_pass"  placeholder="Password Baru" class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+            <input type="text " v-model="repeat_password" placeholder="Verifikasi Password Baru" class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+            <input type="password" v-model="old_password"  placeholder="Password" class="w-full px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
+            <button @click="" class="bg-[hsl(221,83%,53%)] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+                <span class="text-red">Ubah</span>
+            </button>
         </div>
         <hr class="border-t border-gray-300 my-4">
         <h2 class="text-xl pb-4 pt-2 text-[#2d354f]">Lokasi Database & file</h2>
+            Kamu bisa membackup data kamu di folder ini (Klik buka)
+            <button @click="buka" class="bg-[hsl(221,83%,53%)] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
+                <span class="text-red">Buka</span>
+            </button>
+
         <hr class="border-t border-gray-300 my-4">
         <h2 class="text-xl pb-4 pt-2 text-[#2d354f]">Tentang Aplikasi</h2>
         <p>Simple Inventory System adalah aplikasi untuk mengelola stok barang secara sederhana. Aplikasi ini membantu mencatat barang masuk, barang keluar, dan memantau jumlah stok dengan mudah. Dirancang dengan tampilan yang ringan dan mudah digunakan, aplikasi ini cocok untuk kebutuhan usaha kecil hingga menengah.</p>
@@ -45,6 +108,7 @@
         </p>
         </div>
         <hr class="border-t border-gray-300 my-4">
+        Xinver Created by Rakhmadi 
 
    </div>
 </template>
