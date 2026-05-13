@@ -10,10 +10,12 @@ export const homeStore = defineStore('home',{
     actions : {
         async getInfo(){
 
-            let total_product = await (await DB()).select(`select count(*) as total_product from tb_product`)
+            let total_product = await (await DB()).select(`select sum(stock) as total_product from tb_product`)
+            let total_jenis_barang = await (await DB()).select(`select count(id) as total_product from tb_product`)
             let sum_masuk = await (await DB()).select(`SELECT sum(tb_detail_transaction_in.qty) as sum_total FROM  tb_detail_transaction_in`)
             let sum_keluar = await (await DB()).select(`SELECT sum(tb_detail_transaction_out.qty)as sum_total FROM  tb_detail_transaction_out`)
-            let stock_min = await (await DB()).select(`SELECT count(tb_product.id) as total_stockmin from tb_product where tb_product.stock <= 10`)
+            let stock_min = await (await DB()).select(`SELECT count(tb_product.id) as total_stockmin from tb_product where tb_product.stock <= ${Number(localStorage.getItem('min_pringatan_stock')
+)}`)
 
             let grafik_masuk = await (await DB()).select(`select 
                 count(DISTINCT tb_header_transaction_in.id) as transaksi,
@@ -70,7 +72,8 @@ export const homeStore = defineStore('home',{
                 total_harga_barang_keluar : total_harga_barang_keluar[0].total,
                 rata_rata_harga_barang : rata_rata_harga_barang[0].rata_rata_harga_produk,
                 data_banyak_transaksi_keluar : data_banyak_transaksi_keluar,
-                data_banyak_transaksi_masuk : data_banyak_transaksi_masuk
+                data_banyak_transaksi_masuk : data_banyak_transaksi_masuk,
+                total_jenis_barang : total_jenis_barang[0].total_product
             }
 
             return 0

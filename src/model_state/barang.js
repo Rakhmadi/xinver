@@ -11,11 +11,12 @@ export const barangStore = defineStore('barang',{
             data_location : [],
             single_data_barang : {},
             data_image_product : [],
+            data_barang_export : [],
             loading : false
         }
     },
     actions : {
-        async getDataBarang(search,kategori_id,merek_id,location_id,order_by,is_desc,page,take){
+        async getDataBarang(search,kategori_id,merek_id,location_id,order_by,is_desc,page,take,export_ = false){
             this.loading = true                
             let or_search = (search) ? `AND ( ('B-' || tb_product.id) LIKE '%${search}%' OR tb_product.name LIKE '%${search}%' OR tb_product.description LIKE '%${search}%' OR tb_product.sku LIKE '%${search}%')` : ""  
 
@@ -54,17 +55,48 @@ export const barangStore = defineStore('barang',{
                 where 1=1 ${or_search} ${conditional_kategori_id}  ${conditional_merek_id}  ${conditional_location_id}   
                 ORDER BY ${order_by} ${order_by_is_desc}
                 LIMIT ${take_data} offset (${page_now} - 1) * ${take_data}`
+
+                if(export_){
+
+                let raw_query_export = `SELECT 
+                'B-' || tb_product.id  AS code_barang ,
+                tb_product.id,
+                tb_product.name,
+                tb_product.sku,
+                tb_product.stock as product_stock,
+                tb_product.price as product_price,
+                tb_product.unit as product_unit,
+                tb_category.name AS category_name,
+                tb_merek.name AS merek_name,
+                tb_location.name AS location_name,
+                tb_location.code AS location_code,
+                tb_product.created_at AS created_at,
+                (tb_product.price * tb_product.stock) as total_harga
+                FROM tb_product 
+                LEFT JOIN tb_category ON tb_category.id = tb_product.category_id 
+                LEFT JOIN tb_merek ON tb_merek.id = tb_product.merk_id
+                LEFT JOIN tb_location ON tb_location.id = tb_product.location_id
+                where 1=1 ${or_search} ${conditional_kategori_id}  ${conditional_merek_id}  ${conditional_location_id}   
+                ORDER BY ${order_by} ${order_by_is_desc}`
+
+                let data_export = await (await DB()).select(raw_query_export)
+
+                this.data_barang_export = data_export
+
+                }else{
+
+                    let data = await (await DB()).select(raw_query)
+
+                    this.data_barang = {
+                        total_data : total_page[0].total_data ,
+                        take : take_data,
+                        page_now : page_now,
+                        total_page : Number(Math.ceil(total_page[0].total_data / take_data)),
+                        data : data
+                    }
+                }
         
 
-            let data = await (await DB()).select(raw_query)
-
-            this.data_barang = {
-                total_data : total_page[0].total_data ,
-                take : take_data,
-                page_now : page_now,
-                total_page : Number(Math.ceil(total_page[0].total_data / take_data)),
-                data : data
-            }
             this.loading = false   
         },
         

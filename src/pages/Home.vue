@@ -139,17 +139,34 @@ const chartOptions_1 = ref({})
 </script>
 
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 mb-8">
 
     <!-- Card -->
     <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-slate-500 text-sm">
-                    Total Barang
+                    Total Stock Barang
                 </p>
 
                 <h2 class="text-2xl font-bold text-slate-800 mt-2">{{ barang_store.data_home.total_product }}</h2>
+            </div>
+
+            <div class="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl">
+                📦
+            </div>
+        </div>
+    </div>
+
+        <!-- Card -->
+    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-slate-500 text-sm">
+                    Total Jenis Barang
+                </p>
+
+                <h2 class="text-2xl font-bold text-slate-800 mt-2">{{ barang_store.data_home.total_jenis_barang }}</h2>
             </div>
 
             <div class="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl">
