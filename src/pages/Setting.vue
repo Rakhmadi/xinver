@@ -89,14 +89,14 @@ let buka = async()=>{
         </div>
         <hr class="border-t border-gray-300 my-4">
         <h2 class="text-xl pb-4 pt-2 text-[#2d354f]">Lokasi Database & file</h2>
-            <p class="mb-4">Kamu bisa membackup data kamu di folder ini ke (Klik buka folder)</p>
+            <p class="mb-4">Kamu bisa membackup (Database dan File gambar) kamu di folder ini (Klik buka folder)</p>
             <button @click="buka" class="bg-[hsl(221,83%,53%)] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">
-                <span class="text-red">Buka</span>
+                <span class="text-red">Buka Folder</span>
             </button>
 
         <hr class="border-t border-gray-300 my-4">
         <h2 class="text-xl pb-4 pt-2 text-[#2d354f]">Lainnya</h2>
-        <p class="mb-4">Minimum Stock Pringatan</p>
+        <p class="mb-4">Minimum Pringatan Stock</p>
         <div class="flex flex-row gap-2">
             <input type="number" min="5" max="100" v-model="num_minimum_stock"  placeholder="10" class="w-50 px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
             <button @click="changeMinStockPeringatan" class="bg-[hsl(221,83%,53%)] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF] focus:border-b-1 text-white cursor-pointer">

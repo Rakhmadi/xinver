@@ -13,9 +13,12 @@ let data_category_date_masuk = ref([])
 let data_series_transaksi_keluar = ref([])
 let data_series_total_qty_keluar = ref([])
 let data_category_date_keluar = ref([])
+let min_stock = ref(0)
 
 onMounted(async()=>{
     console.log(barang_store.data_home.grafik_masuk);
+
+    min_stock.value = Number(localStorage.getItem('min_pringatan_stock')) + 1
 
     barang_store.getInfo().then(x=>{
         data_series_transaksi_masuk.value = barang_store.data_home.grafik_masuk.map(x=>{return x.transaksi})
@@ -213,7 +216,7 @@ const chartOptions_1 = ref({})
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-slate-500 text-sm">
-                    Stok Menipis
+                    Stok Menipis (kurang dari {{ min_stock }})
                 </p>
 
                 <h2 class="text-2xl font-bold text-slate-800 mt-2">{{ barang_store.data_home.stock_min }}</h2>
