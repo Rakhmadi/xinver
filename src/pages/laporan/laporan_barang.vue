@@ -309,7 +309,7 @@ let export_ = async()=>{
             <!-- HEADER -->
             <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
                 <tr>
-                    <th class="px-4 py-3">Code Barang</th>
+                    <th class="px-4 py-3">Kode Barang</th>
                     <th class="px-4 py-3">Nama Barang</th>
                     <th class="px-4 py-3">SKU</th>
                     <th class="px-4 py-3">Stok</th>

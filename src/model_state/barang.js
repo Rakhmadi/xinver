@@ -226,10 +226,12 @@ export const barangStore = defineStore('barang',{
                 count(tb_category.id) as product_count,
                 sum(tb_product.stock) as sum_stock
                 from tb_category 
-                INNER JOIN tb_product on tb_product.category_id = tb_category.id
+                LEFT JOIN tb_product on tb_product.category_id = tb_category.id
                 ${search_mode}
                 GROUP BY tb_category.id 
                 ORDER BY ${order_by_mode}`)
+
+               
         },
 
         async addDataKategori(category_name,description){
@@ -291,7 +293,7 @@ export const barangStore = defineStore('barang',{
                 count(tb_merek.id) as product_count,
                 sum(tb_product.stock) as sum_stock
                 from tb_merek 
-                INNER JOIN tb_product on tb_product.merk_id = tb_merek.id
+                LEFT JOIN tb_product on tb_product.merk_id = tb_merek.id
                 ${search_mode} 
                 GROUP BY tb_merek.id 
                 ORDER BY ${order_by_mode}`)
@@ -355,7 +357,7 @@ export const barangStore = defineStore('barang',{
                 count(tb_location.id) as product_count,
                 sum(tb_product.stock) as sum_stock
                 from tb_location 
-                INNER JOIN tb_product on tb_product.location_id = tb_location.id
+                LEFT JOIN tb_product on tb_product.location_id = tb_location.id
                 ${search_mode}
                 GROUP BY tb_location.id ORDER BY ${order_by_mode}`)
         },

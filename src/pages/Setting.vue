@@ -136,7 +136,7 @@ let buka = async()=>{
         </p>
         </div>
         <hr class="border-t border-gray-300 my-4">
-        Xinver Created by Rakhmadi 
+        Open Source Software © 2026 Rakhmadi
 
    </div>
 </template>

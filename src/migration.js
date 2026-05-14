@@ -114,7 +114,14 @@ CREATE TABLE IF NOT EXISTS tb_user (
   password TEXT NOT NULL
 );
 
+
 COMMIT;
-PRAGMA foreign_keys = ON;`
+PRAGMA foreign_keys = ON;
+
+INSERT INTO tb_category (name,description) VALUES ('Tidak Ada','-');
+INSERT INTO tb_merek (name,description) VALUES ('Tidak Ada','-');
+INSERT INTO tb_location (code,name,description) VALUES ('000','Default','-');
+insert into tb_user (name,password) values('admin','$2b$10$fcKrBP/3/GbKnCQS4aoKfemDLV4RYrYzCW3xd/yDI8UiFcaX0uBJ2');
+`
 
 export default migration_sql
