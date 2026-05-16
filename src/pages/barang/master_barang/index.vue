@@ -16,6 +16,8 @@ let show_kategori = ref(false)
 let show_merek = ref(false)
 let show_location = ref(false)
 
+let min_stock = ref(5)
+
 let search = ref("")
 let kategori = ref("");
 let kategori_id = ref('')
@@ -73,6 +75,8 @@ onMounted(()=>{
     data_barang.getDataKategori()
     data_barang.getDataMerek()
     data_barang.getDataLocation()
+
+    min_stock.value = localStorage.getItem('min_pringatan_stock')
 
     data_barang.getDataBarang(search.value,kategori_id.value,merek_id.value,location_id.value,order_by.value,order_by_desc.value,1,take.value)
     
@@ -282,7 +286,7 @@ function highlightText(text, keyword) {
                     <td class="px-4 py-3 text-gray-600" v-html="highlightText(item.name,search)"></td>
                     <td class="px-4 py-3 text-gray-600" v-html="highlightText(item.sku,search)"> </td>
                     <td class="px-4 py-3">
-                    <span class="px-2 py-1 text-xs rounded" :class="item.product_stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"> {{ item.product_stock }} </span> - {{ item.product_unit }}</td>
+                    <span class="px-2 py-1 text-xs rounded" :class="item.product_stock > min_stock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"> {{ item.product_stock }} </span> - {{ item.product_unit }}</td>
                     <td class="px-4 py-3 text-gray-700"> {{ formatRupiah(item.product_price) }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ formatRupiah(item.total_harga) }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ item.category_name }} </td>

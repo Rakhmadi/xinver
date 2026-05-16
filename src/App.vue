@@ -57,34 +57,14 @@ let list_menu = ref([
   
 onMounted(async()=>{
 
-
-const salt = await bcrypt.genSalt(10)
-
-const password = '123456'
-
-const hash = await bcrypt.hash(
-  password,
-  salt
-)
-
-console.log(hash);
-
-
 try {
     initDatabase()
    
 } catch (error) {
-    
+
 }
       
-    
 
-
-    const appDataDirPath = await appDataDir();
-    console.log(appDataDirPath);
-    
-
-    
 })
 
 
@@ -160,7 +140,7 @@ let logout = ()=>{
                             </router-link>
                         </li>
                         <li class="">
-                            <button  @click="logout" :class="menu === 'settings' ? 'bg-[#1E40AF]' : 'bg-[#2351e8]'" class=" no-underline flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF]  text-white">
+                            <button  @click="logout"  class="bg-[#2351e8] no-underline flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-[#1E40AF]  text-white">
                                 <span class=" text-sm text-red">Logout</span> 
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />

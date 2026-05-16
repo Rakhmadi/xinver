@@ -107,6 +107,7 @@ let buka = async()=>{
         <h2 class="text-xl pb-4 pt-2 text-[#2d354f]">Tentang Aplikasi</h2>
         <p>Simple Inventory System adalah aplikasi untuk mengelola stok barang secara sederhana. Aplikasi ini membantu mencatat barang masuk, barang keluar, dan memantau jumlah stok dengan mudah. Dirancang dengan tampilan yang ringan dan mudah digunakan, aplikasi ini cocok untuk kebutuhan usaha kecil hingga menengah.</p>
         <div class="mt-4"></div>
+        <hr class="border-t border-gray-300 my-4">
         <h1 class="text-lg font-bold text-gray-800">MIT License</h1>
         <p class="text-sm text-gray-500">Copyright (c) 2026 Rakhmadi</p>
 
@@ -136,7 +137,7 @@ let buka = async()=>{
         </p>
         </div>
         <hr class="border-t border-gray-300 my-4">
-        Open Source Software © 2026 Rakhmadi
+        Xinver Open Source Software © 2026 Rakhmadi
 
    </div>
 </template>

@@ -304,12 +304,12 @@ const chartOptions_1 = ref({})
 
 <div class="grid grid-cols-2 gap-6 mb-8">
     <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-        <h2 class="text-xl text-[#2d354f] font-semibold mb-4">Grafik Transaksi Masuk</h2>
+        <h2 class="text-xl text-[#2d354f] font-semibold mb-4">Grafik Transaksi Barang Masuk</h2>
         <apexchart type="line" height="350" :options="chartOptions_0" :series="series_0"/>
     
     </div>
     <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-        <h2 class="text-xl text-[#2d354f] font-semibold mb-4">Grafik Transaksi Keluar</h2>
+        <h2 class="text-xl text-[#2d354f] font-semibold mb-4">Grafik Transaksi Barang Keluar</h2>
         <apexchart type="line" height="350" :options="chartOptions_1" :series="series_1"/>  
     </div>
 </div>
