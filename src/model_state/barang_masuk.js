@@ -129,16 +129,32 @@ export const barangMasukStore = defineStore('barang_masuk',{
         },
         async addDetailTransakiBarangMasuk(item_single_data_barang,qty,harga){
 
-            
-            this.data_transaksi_detail_barang.push({
-                id_barang : item_single_data_barang.id,
-                kode_barang : item_single_data_barang.code_barang,
-                nama_barang : item_single_data_barang.name,
-                sku : item_single_data_barang.sku,
-                qty : qty,
-                harga : harga
-            })
-            this.data_transaksi_detail_barang.reverse()
+            if(this.data_transaksi_detail_barang.length < 1){
+                this.data_transaksi_detail_barang.push({
+                    id_barang : item_single_data_barang.id,
+                    kode_barang : item_single_data_barang.code_barang,
+                    nama_barang : item_single_data_barang.name,
+                    sku : item_single_data_barang.sku,
+                    qty : qty,
+                    harga : harga
+                })
+            }else{
+                
+                //check data exist
+                let is_exist = this.data_transaksi_detail_barang.some(x => x.id_barang === item_single_data_barang.id)
+
+                if(!is_exist){
+                    this.data_transaksi_detail_barang.push({
+                        id_barang : item_single_data_barang.id,
+                        kode_barang : item_single_data_barang.code_barang,
+                        nama_barang : item_single_data_barang.name,
+                        sku : item_single_data_barang.sku,
+                        qty : qty,
+                        harga : harga
+                    })
+                }
+            }
+
         },
         async removeDetailTransakiBarangMasuk(index){
             this.data_transaksi_detail_barang.splice(index,1)

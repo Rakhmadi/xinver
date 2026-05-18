@@ -33,6 +33,12 @@ let menu_active = ref("master_barang")
         </div>
         <span class="text-[#2d354f]">Laporan Stok Barang Menipis</span>
     </router-link>
+    <router-link to="/laporan/laporan_riwayat_transaksi_barang" @click="menu_active = 'laporan_riwayat_transaksi_barang'" :class="menu_active == 'laporan_riwayat_transaksi_barang' ? 'border-[#2351e8] bg-[#b5c1e6]' : 'bg-[#d9ddeb] border-transparent'" class="no-underline router-link-active router-link-exact-active  text-[#2d354f] text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1  hover:bg-[#b5c1e6] focus:border-b-1 cursor-pointer">
+        <div>
+            📦
+        </div>
+        <span class="text-[#2d354f]">Laporan Riwayat Keluar Dan Masuk Barang</span>
+    </router-link>
   </div>
 
 <div class="py-4 px-0">

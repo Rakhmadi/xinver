@@ -42,7 +42,8 @@ let export_ = async()=>{
                     description : x.description
                 }
             })
-
+            const now = new Date();
+            const timestamp = now.toISOString().replace(/[^0-9]/g, '').slice(0, 14);
     // buat worksheet
             const worksheet = XLSX.utils.json_to_sheet(data_export.value);
 
@@ -64,7 +65,7 @@ let export_ = async()=>{
 
             // dialog save
             const filePath = await save({
-                defaultPath: "laporan Stock Menipis.xlsx",
+                defaultPath: `laporan_stock_menipis_${timestamp}.xlsx`,
                 filters: [
                 {
                     name: "Excel",
@@ -87,7 +88,8 @@ let export_ = async()=>{
 }
 </script>
 <template>
-    <h2 class="mb-4">Laporan Transaksi Barang Keluar</h2>
+    <h2 class="">Laporan Stock Barang Menipis</h2>
+    <p class="mb-4">informasi ( Kamu Bisa Ubah Nilai Minimum Peringatan Stock Di Pengaturan )</p>
         <button @click="export_" class="bg-green-700 mb-4 text-sm flex flex-row items-center rounded-full py-1 px-3 gap-1 border-1 border-transparent hover:bg-green-800 focus:border-b-1 text-white cursor-pointer">
            <div>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">

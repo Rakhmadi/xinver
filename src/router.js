@@ -101,6 +101,10 @@ const routes = [
         path : 'laporan_stock_menipis',
         name : 'laporan_stock_menipis',
         component : ()=>import('./pages/laporan/laporan_stock_menipis.vue')
+      },{
+        path : 'laporan_riwayat_transaksi_barang',
+        name : 'laporan_riwayat_transaksi_barang',
+        component : ()=>import('./pages/laporan/laporan_riwayat_transaksi_barang.vue')
       }
     ]
   }

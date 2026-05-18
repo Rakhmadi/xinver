@@ -28,6 +28,9 @@ let export_ = async()=>{
                 }
             })
 
+            const now = new Date();
+            const timestamp = now.toISOString().replace(/[^0-9]/g, '').slice(0, 14);
+
     // buat worksheet
             const worksheet = XLSX.utils.json_to_sheet(data_export);
 
@@ -49,7 +52,7 @@ let export_ = async()=>{
 
             // dialog save
             const filePath = await save({
-                defaultPath: "laporan barang keluar.xlsx",
+                defaultPath: `laporan_barang_keluar_${timestamp}.xlsx`,
                 filters: [
                 {
                     name: "Excel",

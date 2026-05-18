@@ -30,6 +30,7 @@ let order_by_desc = ref(true)
 let order_by = ref('tb_product.created_at')
 let take = ref(10)
 let page = ref(1)
+let min_stock = ref(5)
 // let filtered_category = ref([])
 // let filtered_merek = ref([])
 // let filtered_location = ref([])
@@ -78,6 +79,9 @@ onMounted(()=>{
 
     data_barang.getDataBarang(search.value,kategori_id.value,merek_id.value,location_id.value,order_by.value,order_by_desc.value,1,take.value)
     
+    min_stock.value = localStorage.getItem('min_pringatan_stock')
+
+
     if(route.query.data_succes_add === "true"){
         msg.value = true
         msg_content.value = 'Data Berhasil Di Tambahkan '
@@ -180,7 +184,8 @@ function highlightText(text, keyword) {
 
 let export_ = async()=>{
         data_barang.getDataBarang(search.value,kategori_id.value,merek_id.value,location_id.value,order_by.value,order_by_desc.value,1,take.value,true).then(async()=>{
-                  
+        const now = new Date();
+        const timestamp = now.toISOString().replace(/[^0-9]/g, '').slice(0, 14);
         // buat worksheet
         const worksheet = XLSX.utils.json_to_sheet(data_barang.data_barang_export);
 
@@ -202,7 +207,7 @@ let export_ = async()=>{
 
         // dialog save
         const filePath = await save({
-            defaultPath: "laporan_barang.xlsx",
+            defaultPath: `laporan_barang_${timestamp}.xlsx`,
             filters: [
             {
                 name: "Excel",
@@ -329,7 +334,7 @@ let export_ = async()=>{
                     <td class="px-4 py-3 text-gray-600" v-html="highlightText(item.name,search)"></td>
                     <td class="px-4 py-3 text-gray-600" v-html="highlightText(item.sku,search)"> </td>
                     <td class="px-4 py-3">
-                    <span class="px-2 py-1 text-xs rounded" :class="item.product_stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"> {{ item.product_stock }} </span> - {{ item.product_unit }}</td>
+                    <span class="px-2 py-1 text-xs rounded" :class="item.product_stock > min_stock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"> {{ item.product_stock }} </span> - {{ item.product_unit }}</td>
                     <td class="px-4 py-3 text-gray-700"> {{ formatRupiah(item.product_price) }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ formatRupiah(item.total_harga) }} </td>
                     <td class="px-4 py-3 text-gray-700"> {{ item.category_name }} </td>

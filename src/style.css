@@ -25,3 +25,35 @@
         background: #000 !important;
       }
 
+/* Apply these rules to isolate printing */
+@media print {
+  /* 1. Hide everything on the page by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* 2. Make only your target container (e.g., #print-area) and its children visible */
+  #print-area, #print-area * {
+    visibility: visible;
+  }
+
+  /* 3. Bring the print area to the top left so it renders correctly */
+  #print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  /* 4. Use page-break to force a page divider at specific sections */
+  .page-divider {
+    page-break-after: always; /* Forces a new PDF page after this element */
+    break-after: always;      /* Modern standard for page breaks */
+  }
+
+  /* 5. Prevent elements from being cut in half across pages */
+  .no-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

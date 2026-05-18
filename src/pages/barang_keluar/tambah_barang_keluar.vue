@@ -249,6 +249,7 @@ let clearDetail = ()=>{
                 <!-- HEADER -->
                 <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
                     <tr>
+                    <th class="px-4 py-3">NO. </th>
                     <th class="px-4 py-3">Kode Barang </th>
                     <th class="px-4 py-3">Nama Barang</th>
                     <th class="px-4 py-3">SKU</th>
@@ -265,6 +266,9 @@ let clearDetail = ()=>{
                     <!-- ROW -->
                     <tr v-for="(item,index) in data_transaksi_detail_barang" :key="index" class="hover:bg-gray-50 transition">
                         <!-- NAMA -->
+                         <td class="px-4 py-3 font-medium text-gray-800" >
+                            {{ index + 1 }}
+                        </td>
                         <td class="px-4 py-3 font-medium text-gray-800" >
                             {{ item.kode_barang }}
                         </td>
@@ -300,7 +304,7 @@ let clearDetail = ()=>{
             </div>
 
             <div class="flex flex-row-reverse my-4">
-                <h3>Total Harga  {{formatRupiah(total_harga_detail_barang)}}</h3>
+                <div class="bg-gray-100 rounded-xl px-4 py-3"><h3 class="font-semibold text-gray-700">Total Harga  {{formatRupiah(total_harga_detail_barang)}}</h3></div>
             </div>
         </div>
 
