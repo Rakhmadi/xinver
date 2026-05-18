@@ -137,6 +137,8 @@ let buka = async()=>{
         </p>
         </div>
         <hr class="border-t border-gray-300 my-4">
+        <span class="text-xs">kontak developer rakhmadiwalker@gmail.com</span>
+        <br>
         Xinver Open Source Software © 2026 Rakhmadi
 
    </div>

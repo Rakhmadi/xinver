@@ -123,7 +123,7 @@ export const barangMasukStore = defineStore('barang_masuk',{
             OR ('B-' || tb_product.id) LIKE '%${input_barang}%' 
             OR description LIKE '%${input_barang}%' )` : ''
 
-            let raw_query = `SELECT *,('B-' || tb_product.id) as code_barang FROM tb_product WHERE 1=1 ${input_tp}  ORDER BY name DESC LIMIT 10`
+            let raw_query = `SELECT *,('B-' || tb_product.id) as code_barang FROM tb_product WHERE 1=1 ${input_tp}  ORDER BY name DESC LIMIT 50`
 
             this.data_barang = await(await DB()).select(raw_query)
         },

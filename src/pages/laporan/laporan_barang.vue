@@ -231,6 +231,7 @@ let export_ = async()=>{
 
 </script>
 <template>
+    <h2 class="mb-4">Laporan Barang</h2>
     <div class="flex justify-between mb-4">
         <div class=" gap-2 flex flex-row w-[50%] items-center grow">
             <input v-model="search" type="text" placeholder="Cari Kode - Nama Barang - SKU" class="w-[250px] px-2 py-1 text-md bg-[#e4edff] border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2563EB] focus:border-[#2563EB]">
