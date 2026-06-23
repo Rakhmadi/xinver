@@ -20,7 +20,6 @@ let export_ = async()=>{
                     kode_transaksi : x.code_transaksi,
                     tanggal_transaksi : x.date, 
                     deskripsi : x.description,
-                    nama_supplier : x.name,
                     total_qty : x.sum_total_qty,
                     total_jenis_barang : x.jenis_produk,
                     total_harga : x.total_price
